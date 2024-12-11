@@ -1,0 +1,140 @@
+@import url(./Variables.css);
+
+.sign-ul li a {
+  color: var(--primary-black);
+  display: inline-block;
+  padding: 4px 8px;
+}
+
+.sign-ul li a.active {
+  color: var(--theme-color);
+  display: inline-block;
+  padding: 4px 15px;
+  border: 1px solid var(--theme-color);
+  border-radius: 4px;
+}
+
+.sign-body {
+  width: 480px;
+  margin: auto;
+  padding-bottom: 40px;
+}
+
+.sign-body form input[type="text"] {
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 40px;
+  border: 1px solid var(--primary-gray);
+  width: 100%;
+  border-radius: 6px;
+  background-color: var(--white);
+}
+
+.sign-body form input[type="password"] {
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 40px;
+  border: 1px solid var(--primary-gray);
+  width: 100%;
+  border-radius: 6px;
+  background-color: var(--white);
+}
+
+.sign-body form input[type="email"] {
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 50px;
+  border: 1px solid var(--primary-gray);
+  width: 100%;
+  border-radius: 6px;
+}
+
+.sign-body form input[type="submit"] {
+  font-size: 16px;
+  height: 50px;
+  border: 1px solid var(--theme-color);
+  background: var(--theme-color);
+  color: var(--white);
+  width: 100%;
+  border-radius: 50px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.sign-body form button[type="submit"] {
+  font-size: 16px;
+  height: 50px;
+  border: 1px solid var(--theme-color);
+  background: var(--theme-color);
+  color: var(--theme-white);
+  width: 100%;
+  border-radius: 50px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.sign-body form label {
+  color: var(--primary-black);
+  font-weight: 400;
+  text-align: left;
+}
+
+.sign-body .over-icon {
+  position: relative;
+}
+
+.sign-body .over-icon span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+}
+
+.sign-body .over-icon span img {
+  width: 19px;
+}
+
+.sign-body .input-grp {
+  margin-top: 15px;
+}
+
+.sign-body .link {
+  color: var(--theme-color);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 7px;
+}
+
+.sign-body .link:before {
+  content: "";
+  position: absolute;
+  top: 25px;
+  width: 70%;
+  height: 1px;
+  background: var(--theme-color);
+  left: 50%;
+  z-index: -1;
+  transform: translateX(-50%);
+}
+
+.sign-body form p {
+  text-align: center;
+  padding: 15px;
+  background: var(--white);
+  position: relative;
+  display: inline-block;
+  color: var(--primary-gray);
+  font-size: 15px;
+}
+
+.sign-body form p:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 120%;
+  height: 1px;
+  background: #707070;
+  left: -21px;
+  z-index: -1;
+}

@@ -1,0 +1,11 @@
+.options__wrapper {
+  position: absolute;
+  top: 0;
+  background-color: white;
+  padding: 1rem;
+}
+
+.option {
+  display: flex;
+  padding: 1rem 2rem;
+}

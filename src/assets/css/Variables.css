@@ -1,0 +1,48 @@
+:root {
+  --max-width: 1920px;
+  --border-radius: 16px;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+
+  --theme-color: #03f;
+  --theme-color-light: #e5eaff;
+  --theme-white: #ffffff;
+  --white: #ffffff;
+  --black: #000000;
+  --primary-black: #242424;
+  --primary-gray: #596970;
+  --primary-red: #ff0000;
+  --secondary-gray: #adbacf;
+  --box-shadow-light: #00000014;
+
+  --secondary-black: #000000;
+
+  --font-sz-xs: 14px;
+  --font-sz-sm: 16px;
+  --font-sz-md: 18px;
+  --font-sz-lg: 20px;
+
+  --font-wt-medium: 500;
+  --font-wt-semibold: 600;
+  --font-wt-bold: 700;
+}
+
+/* Set The Styling As Per System Theme */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+
+    --white: #000000;
+    --black: #ffffff;
+    --primary-black: #ffffff;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+} */

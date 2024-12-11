@@ -1,0 +1,35 @@
+@import url(./Variables.css);
+
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logout input[type="submit"] {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 21px;
+  color: var(--primary-black);
+  border: 0;
+  background: none;
+  flex: 1;
+  text-align: left;
+}
+
+[dir="rtl"] .logout input[type="submit"] {
+  text-align: right;
+}
+
+.logout span {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 21px;
+  color: var(--primary-black);
+  border: 0;
+  background: none;
+}
+
+[dir="rtl"] .logout span i {
+  transform: rotate(180deg);
+}

@@ -1,0 +1,138 @@
+@import url(./Variables.css);
+
+.sidebar .logo img {
+  width: 74px;
+  margin-bottom: 60px;
+}
+
+.sidebar-ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-ul li {
+  margin-bottom: 16px;
+}
+
+.sidebar-ul li a {
+  text-decoration: none;
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  color: var(--primary-black);
+}
+
+.sidebar-ul li svg {
+  flex: 0 0 24px;
+  fill: var(--primary-black);
+}
+
+.sidebar .content-btn {
+  border: 1px solid var(--theme-color);
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 24px;
+  background: var(--theme-color);
+  color: var(--white);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 5px 5px 18px;
+  text-decoration: none !important;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+.sidebar-ul li.active {
+  position: relative;
+  color: var(--theme-color);
+}
+
+.sidebar-ul li.active svg path,
+.sidebar-ul li.active svg {
+  fill: var(--theme-color);
+}
+
+.sidebar .content-btn img {
+  width: 26px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.home-profile-info.profile-page-head-ul {
+  margin-bottom: 2rem;
+}
+
+.home-profile-info .profile-page-head-avatar .img-sec {
+  margin: auto;
+}
+
+.home-profile-info.profile-page-head-ul::after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: var(--secondary-gray);
+  display: block;
+  position: absolute;
+  left: 0;
+  opacity: 0.5;
+}
+
+.home-profile-info.profile-page-head-ul #userDescription {
+  display: none;
+}
+
+.home-profile-info.profile-page-head-ul .profile-page-head-avatar {
+  width: 100%;
+  text-align: center;
+}
+.sidebar-ul li.active a {
+  color: var(--theme-color);
+  font-weight: var(--font-wt-bold);
+}
+
+.version {
+  position: fixed;
+  bottom: 0;
+  width: 15%;
+  background-color: var(--white);
+  padding: 8px 0;
+}
+
+.version p {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 1.5;
+  padding-left: 4px;
+  opacity: 0.5;
+}
+
+@media screen and (min-width: 1600px) {
+  .sidebar-ul li svg {
+    flex: 0 0 32px;
+  }
+
+  .sidebar-ul li {
+    margin-bottom: 24px;
+  }
+
+  .sidebar-ul li a {
+    font-size: var(--font-sz-md);
+  }
+
+  .sidebar .content-btn {
+    font-size: var(--font-sz-md);
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .version {
+    display: none;
+  }
+}

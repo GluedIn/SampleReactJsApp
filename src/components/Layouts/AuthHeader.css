@@ -1,0 +1,28 @@
+@import url(../../assets/css/Variables.css);
+
+header {
+  padding-top: 15px;
+}
+
+.container-flex {
+  width: 100%;
+  max-width: 1920px;
+  padding: 0 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.container-flex .sign-ul {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media screen and (max-width: 576px) {
+  .container-flex {
+    justify-content: flex-end;
+    padding: 0 16px;
+  }
+}

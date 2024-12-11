@@ -1,0 +1,14 @@
+@import url(./Variables.css);
+
+body.dark {
+  --primary-black: #dddddd;
+  --white: #242424;
+  --black: #dddddd;
+  --box-shadow-light: #0000009e;
+  --primary-gray: #858585;
+  --secondary-black: #858585;
+}
+
+body.dark .sidebar .content-btn {
+  color: var(--theme-white);
+}

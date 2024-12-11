@@ -1,0 +1,12 @@
+@import url(../../assets/css/Variables.css);
+
+.language-dropdown select {
+  border: 0;
+  background-color: var(--white);
+  outline: 0;
+  cursor: pointer;
+  font-size: var(--font-sz-xs);
+  font-weight: var(--font-wt-semibold);
+  line-height: 25px;
+  color: var(--primary-black);
+}

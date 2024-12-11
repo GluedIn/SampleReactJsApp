@@ -1,0 +1,76 @@
+@import url(./Variables.css);
+
+.arrival-box {
+  margin: 0px !important;
+}
+.owl-carousel {
+  margin: 0px -5px !important;
+}
+
+.rail-header {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.rail-header h4 {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px;
+  color: #000;
+  font-size: 18px;
+}
+.rail-header a {
+  float: right;
+  vertical-align: middle;
+  text-decoration: none;
+}
+.rail-header a span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.rail-header a img {
+  width: 11px;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+.mt-t-25 {
+  margin-top: 25px;
+}
+.arrival-box .box .img-box {
+  background-size: cover;
+  max-height: 227px;
+  height: 227px;
+  border-radius: 9px;
+  background-color: #f1f1f1 !important;
+}
+
+.arrival-box .owl-carousel .owl-nav {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  margin: 0px;
+}
+.arrival-box .owl-carousel .owl-nav button {
+  width: 40px;
+  height: 40px;
+  background: #fff !important;
+  border-radius: 50% !important;
+  text-align: center;
+  box-shadow: 0px 0px 5px 3px rgb(0 0 0 / 8%);
+}
+.arrival-box .owl-carousel .owl-nav button.owl-next {
+  position: absolute;
+  right: -27px;
+}
+.arrival-box .owl-carousel .owl-nav button.owl-prev {
+  position: absolute;
+  left: -27px;
+}
+.arrival-box .owl-carousel .owl-nav button img {
+  width: 16px;
+}
+
+.head-part li:last-child a span {
+  display: inline-block;
+}

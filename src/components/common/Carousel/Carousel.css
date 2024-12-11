@@ -1,0 +1,92 @@
+.carousel-container {
+  position: relative;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+  scroll-behavior: smooth;
+}
+
+.slides {
+  display: flex;
+  will-change: transform;
+  transition: transform 0.3s ease-out;
+}
+
+.slide {
+  flex: 0 0 100%;
+  padding: 0 5px;
+}
+
+.arrow {
+  position: absolute;
+  top: -45px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow svg path {
+  fill: #03f;
+}
+
+.prev {
+  right: 40px;
+}
+
+[dir="rtl"] .prev {
+  right: unset;
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+[dir="rtl"] .next {
+  right: unset;
+  left: 40px;
+}
+
+.arrow[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.repost_actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.repost_actions-btn {
+  border: 0;
+  background: none;
+}
+
+.repost_actions-btn .btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.repost_actions-btn .btn-wrap span {
+  width: 58px;
+  height: 58px;
+}
+
+.repost_actions-btn .btn-wrap div {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 20px;
+}

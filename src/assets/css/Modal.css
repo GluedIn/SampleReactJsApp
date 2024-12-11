@@ -1,0 +1,178 @@
+@import url(./Variables.css);
+
+/* Common Styles For Modal Start */
+.modal {
+  padding: 0 !important;
+}
+
+.modal .modal-dialog {
+  margin: 0 auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal .modal-dialog .modal-content {
+  width: 100%;
+  box-shadow: 0px 0px 65px #00000014;
+  border-radius: 16px;
+}
+
+.modal .modal-dialog .modal-content .modal-body {
+  text-align: center;
+}
+/* Common Styles For Modal End */
+
+/* Signup Modal Styles Start */
+#signupmodel h2 {
+  font-size: 32px;
+  font-weight: var(--font-wt-semibold);
+  text-align: center;
+  margin: 0;
+}
+
+#signupmodel p.text {
+  font-size: var(--font-sz-md);
+  font-weight: var(--font-wt-medium);
+  line-height: 1.4;
+  margin: 16px 0;
+}
+
+#signupmodel .modal-content {
+  max-width: 420px;
+}
+
+#signupmodel .modal-body {
+  padding: 32px;
+}
+
+#signupmodel .close {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  opacity: 1;
+  z-index: 1;
+}
+/* Signup Modal Styles End */
+
+/* Report Modal Styles Start */
+#reportUserModel button,
+#report-modal button {
+  background-color: var(--theme-color);
+  color: var(--white);
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-medium);
+  border: none;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 50px;
+}
+
+#report-modal button.close {
+  background: none;
+  border: 1px solid;
+  color: var(--primary-black);
+  opacity: 1;
+  border-radius: 50px;
+  position: static;
+  top: 0px;
+  left: 0px;
+  height: 40px;
+}
+
+#report-modal button.close:hover,
+#reportUserModel .cancel-btn,
+#report-modal .cancel-btn {
+  background-color: var(--white);
+  color: var(--theme-color);
+}
+
+#reportUserModel .submit-btn,
+#report-modal .submit-btn {
+  margin-top: 3rem;
+}
+
+#reportUserModel .reason-wrpr label,
+#report-modal label {
+  font-size: var(--font-sz-xs);
+  font-weight: var(--font-wt-medium);
+  line-height: 25px;
+  margin-bottom: 0px;
+  width: 80%;
+  text-align: left;
+}
+
+#reportUserModel .radio-inputfield,
+#report-modal .radio-inputfield {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#reportUserModel .radio-inputfield br,
+#report-modal .radio-inputfield br {
+  display: none;
+}
+
+#reportUserModel .radio-inputfield input[type="radio"],
+#report-modal .radio-inputfield input[type="radio"] {
+  margin: 0;
+}
+
+#reportUserModel .modal-dialog,
+#report-modal {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#reportUserModel .modal-body,
+#report-modal .modal-body {
+  padding: 2rem 3rem;
+}
+
+.modal-rtl.modal #report-modal .radio-inputfield,
+.modal-rtl.modal #report-modal .bottom-button-group {
+  flex-direction: row-reverse;
+}
+
+.modal-rtl.modal #report-modal .radio-inputfield label {
+  text-align: right;
+}
+/* Report Modal Styles End */
+
+/* Post Settings Modal Styles Start */
+#postSettings .modal-header {
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-sz-md);
+  font-weight: var(--font-wt-semibold);
+  line-height: 20px;
+  color: var(--primary-black);
+}
+
+#postSettings .modal-header .btn_transparent {
+  width: 34px;
+  height: 34px;
+}
+
+#postSettings .modal-header::before,
+#postSettings .modal-header::after,
+#postSettings .btn-close {
+  display: none;
+}
+
+#postSettings .modal-body {
+  padding-top: 0;
+  text-align: left;
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  color: var(--primary-gray);
+  line-height: 20px;
+}
+/* Post Settings Modal Styles End */

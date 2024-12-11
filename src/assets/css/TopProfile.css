@@ -1,0 +1,27 @@
+@import url(./Variables.css);
+
+.top-profile-box .item img {
+    width: 55px !important;
+    margin: auto;
+    border-radius: 50%;
+    height: 55px;
+    object-fit: cover;
+}
+
+.top-profile-box .item span.name {
+    display: block;
+    margin-top: 10px;
+    font-size: 15px;
+    color: #000;
+    font-family: "ARIALMDM";
+}
+
+span.followers{font-size: 10px; font-family: "ARIAL"; margin-top:0px; color:#fff;}
+.top-profile-box{margin-top: 20px;}
+
+.item a{
+    text-decoration: none !important;
+}
+.top-profile-box-left-sec{
+    padding: 0;
+}

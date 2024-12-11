@@ -1,0 +1,467 @@
+@import url(./Variables.css);
+
+.post-detail-box {
+  text-align: left;
+}
+
+.top-details a {
+  color: var(--primary-black);
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.top-details p {
+  font-size: 14px;
+  margin-bottom: 0px;
+}
+
+.post-detail-box .top-details ul {
+  position: relative;
+}
+
+.post-detail-box .top-details ul li:last-child {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.post-detail-box .top-details ul li img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.post-box-parent {
+  position: relative;
+}
+
+.post-slider-box-bottom {
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.post-slider-box-bottom-ul {
+  width: 100%;
+  text-align: left;
+}
+
+.post-slider-box-bottom-ul li a span {
+  color: var(--primary-black);
+  padding-left: 5px;
+}
+
+.post-slider-box-bottom {
+  overflow: hidden;
+}
+
+.videoInner {
+  width: 100%;
+}
+
+.video-player {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.edit-delete-option .edit-option {
+  padding-right: 5px;
+  margin-right: 5px;
+  border-right: 1px solid #808080;
+}
+
+.edit-delete-option {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
+.edit-delete-option button {
+  border: none;
+  cursor: pointer;
+  background: none;
+}
+
+.edit-delete-option button img {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
+  transition: 0.3s;
+}
+
+.reply_content {
+  margin-top: 5px;
+}
+
+.reply_content button {
+  display: block;
+  background: none;
+  border: none;
+  color: #596970;
+  position: relative;
+}
+
+button.view_replies {
+  padding-left: 16px;
+}
+
+button.view_replies:before {
+  display: inline-block;
+  clear: both;
+  content: "";
+  height: 1px;
+  width: 15px;
+  background-color: var(--primary-gray);
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  left: 5px;
+}
+
+.dropdown-toogle-menu {
+  width: 250px !important;
+}
+
+.reply_btn {
+  display: block;
+  /* padding-bottom: 12px; */
+  /* margin-bottom: 12px; */
+  border-bottom: 1px solid rgba(212, 227, 237, 0.5);
+}
+
+.reply_btn.reply_actions {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.reply_btn.reply_actions:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.reply_btn .btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.reply_btn .btn-wrap p {
+  font-family: var(--font-sz-sm);
+  font-weight: var(--font-wt-medium);
+  line-height: 20px;
+  color: var(--primary-black);
+  margin-bottom: 0;
+}
+
+.reply_btn .btn-wrap span {
+  width: 55px;
+  height: 55px;
+  flex: 0 0 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--primary-gray);
+  border-radius: 50%;
+}
+
+@media screen and (max-width: 1536px) {
+  .dropdown-toogle-menu {
+    width: 220px !important;
+  }
+  .reply_btn .btn-wrap span {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+  .reply_btn .btn-wrap span svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Arabic Styling */
+
+[dir="rtl"] .sidebar-ul {
+  text-align: right;
+  position: relative;
+  padding-top: 2rem;
+}
+
+[dir="rtl"] .sidebar-ul li.active a:before,
+[dir="rtl"] .sidebar-ul li.active:before {
+  right: -10px;
+  left: unset;
+}
+
+[dir="rtl"] .sidebar-ul li svg {
+  margin-left: 10px;
+}
+
+[dir="rtl"] .post-detail-box .top-details ul {
+  display: flex;
+}
+
+[dir="rtl"] .post-detail-box .top-details ul li:last-child {
+  right: unset;
+  left: 0px;
+}
+
+[dir="rtl"] .post-detail-box .top-details ul li:nth-last-child(2) {
+  display: flex;
+  align-items: center;
+}
+
+[dir="rtl"] .post-detail-box .top-details ul li:first-child {
+  margin-right: 0px;
+  margin-left: 10px;
+}
+
+[dir="rtl"] .top-details .sml-text,
+[dir="rtl"] .top-details .c-text {
+  text-align: right;
+}
+
+[dir="rtl"] .comment-box .comment-dots {
+  right: unset;
+  left: 0px;
+}
+
+[dir="rtl"] .comment-box li.img-li {
+  padding-right: 0px;
+  padding-left: 8px;
+}
+
+[dir="rtl"] .post-slider-box-bottom-ul li {
+  float: right;
+}
+
+[dir="rtl"] .post-slider-box-bottom-ul li:last-child {
+  float: left;
+}
+
+[dir="rtl"] .post-slider-box-bottom-ul li a span {
+  padding-left: 0px;
+  padding-right: 10px;
+}
+
+[dir="rtl"] .profile-suggestions .top-profile-box {
+  left: 0px;
+}
+
+[dir="rtl"] .profile-suggestions .top-profile-box ul li img {
+  margin-right: 0px;
+  margin-left: 2rem;
+}
+
+[dir="rtl"] .report-wrapper ul.dot-suboption li a {
+  left: -1rem;
+  right: unset;
+}
+
+[dir="rtl"] .report-wrapper ul {
+  right: unset;
+  left: 0px;
+}
+
+[dir="rtl"] .edit-delete-option .edit-option {
+  padding-left: 5px;
+  padding-right: unset;
+  margin-left: 5px;
+  margin-right: unset;
+  border-left: 1px solid #808080;
+  border-right: unset;
+}
+
+[dir="rtl"] li.feed-options ul {
+  right: unset;
+  left: -3px;
+}
+
+[dir="rtl"] ul.dot-suboption:before {
+  right: unset;
+  left: 10px;
+}
+
+[dir="rtl"] .report-button i.fa {
+  margin-right: unset;
+  margin-left: 5px;
+}
+
+[dir="rtl"] .sidebar .content-btn {
+  display: flex;
+  gap: 10px;
+  right: 2rem;
+  padding: 10px 20px 10px 5px;
+}
+
+[dir="rtl"] .full-sec .left-sec {
+  z-index: 999;
+  border-radius: 40px 0 0 0;
+}
+
+[dir="rtl"] .page-search-box .input-box img {
+  right: unset;
+  left: 15px;
+}
+
+[dir="rtl"] .full-sec .right-sec {
+  margin-left: unset;
+  margin-right: 300px;
+}
+
+[dir="rtl"] .right-sec.col-md-9.profile-content-list {
+  margin-right: unset;
+  margin-left: 21%;
+}
+
+[dir="rtl"] .sign-body .over-icon span {
+  right: unset;
+  left: 15px;
+}
+
+[dir="rtl"] .back-btn a {
+  left: 11rem;
+}
+
+[dir="rtl"] .text-content-wrapper .bottom_btn .post-now {
+  margin-left: unset;
+  margin-right: 2rem;
+}
+
+[dir="rtl"] .followers-info.profile-page-head-content-inner li:nth-child(3) {
+  border: none;
+  padding-right: 15px;
+  padding-left: unset;
+}
+
+[dir="rtl"] .followers-info.profile-page-head-content-inner li:first-child {
+  padding-right: unset;
+  padding-left: 15px;
+}
+
+[dir="rtl"] .right-sec.col-md-9.profile-content-list.discover-top {
+  margin-left: unset;
+}
+
+[dir="rtl"] .back-btn a {
+  right: 7rem;
+}
+
+[dir="rtl"] .web-view {
+  position: relative;
+}
+
+[dir="rtl"] .profile-page-header .profile-page-header-icon {
+  position: absolute;
+  left: 0px;
+  right: unset;
+}
+
+[dir="rtl"] .profile-page-header-dropdown .drop-menu {
+  right: unset;
+  left: 0px;
+  top: 4rem;
+}
+[dir="rtl"] ul.home-profile-info.profile-page-head-ul.list-none {
+  flex-direction: column;
+}
+
+[dir="rtl"] .profile-page-head-ul {
+  display: flex;
+  position: relative;
+}
+
+[dir="rtl"] .profile-page-head-ul li {
+  float: right;
+  text-align: center;
+}
+
+[dir="rtl"] .home-profile-info.profile-page-head-ul .profile-page-head-avatar {
+  text-align: center;
+}
+
+[dir="rtl"] .home-profile-info.profile-page-head-ul::after {
+  width: calc(100% + 75px);
+  position: absolute;
+  left: -30px;
+  bottom: 0;
+}
+
+[dir="rtl"] .profile-page-head-ul li ul li:last-child {
+  border-left: none;
+}
+
+[dir="rtl"] .comment_info .content .comment_actions .delete_btn {
+  padding-left: unset;
+  border-left: unset;
+  padding-right: 10px;
+  border-right: 2px solid #ddd;
+}
+
+/* [dir="rtl"] .userVideoData {
+  display: flex;
+  flex-wrap: wrap;
+} */
+
+[dir="rtl"] .profile-page-head-content-inner li h5,
+[dir="rtl"] .profile-page-head-content-inner li h4 {
+  text-align: right;
+}
+
+[dir="rtl"] ul.home-profile-info.profile-page-head-ul.list-none li h4,
+[dir="rtl"] ul.home-profile-info.profile-page-head-ul.list-none li h5 {
+  text-align: center;
+}
+
+[dir="rtl"] .right-sec.col-md-9.profile-content-list.search-filter {
+  margin-left: unset;
+}
+
+[dir="rtl"] .card-info .right_info {
+  padding-left: unset;
+  padding-right: 5px;
+}
+
+.comment_info .left {
+  display: flex;
+  gap: 10px;
+}
+
+.comment_info .view_replies {
+  padding-left: 1.5rem;
+  margin-top: 10px;
+}
+.comment_info .view_replies:before {
+  display: inline-block;
+  clear: both;
+  content: "";
+  height: 2px;
+  width: 15px;
+  background-color: var(--primary-black);
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  left: 5px;
+}
+.sidebar_wrapper select {
+  background: #fff;
+  color: #000;
+}
+.feed-detail-section video {
+  background-color: #f8f7f7;
+}
+
+@media screen and (min-width: 1600px) {
+  [dir="rtl"] .full-sec .right-sec {
+    margin-left: unset;
+    margin-right: 350px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  [dir="rtl"] .full-sec .right-sec {
+    margin-right: 300px;
+  }
+}

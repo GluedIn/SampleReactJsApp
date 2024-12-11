@@ -1,0 +1,64 @@
+@import url("../../../../assets/css/Variables.css");
+
+.toastContainer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  margin-left: 300px;
+}
+
+.toastContainer .toast-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  width: calc((100dvh - 110px) * 0.5);
+  margin: auto;
+  background: var(--white);
+  box-shadow: 0px 0px 65px #00000014;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.toastContainer .btn_transparent {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.toastContainer .btn_transparent svg {
+  flex: 0 0 40px;
+  height: 40px;
+}
+
+.toast-header,
+.toast-body {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-medium);
+  line-height: 24px;
+}
+
+.toast-header {
+  color: var(--primary-black);
+}
+
+.toast-body {
+  color: var(--primary-gray);
+}
+
+@media screen and (max-height: 768px) {
+  .toastContainer .toast-container {
+    width: 100%;
+    max-width: 475px;
+  }
+}

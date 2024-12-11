@@ -1,0 +1,130 @@
+@import url(./Variables.css);
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: "Mada", sans-serif;
+  color: var(--primary-black);
+  padding: 0 !important;
+  background-color: var(--white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+ol,
+ul,
+li {
+  list-style-type: none;
+  margin: 0;
+}
+
+iframe {
+  display: none;
+}
+
+/* Scroll Bar Style Start */
+/* Width */
+::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-gray);
+  border-radius: 6px;
+}
+/* Scroll Bar Style End */
+
+/* Padding Class  */
+.p_0 {
+  padding: 0 !important;
+}
+.pr_0 {
+  padding-right: 0 !important;
+}
+.pr_1 {
+  padding-right: 10px !important;
+}
+.pr_2 {
+  padding-right: 20px !important;
+}
+.pr_3 {
+  padding-right: 30px !important;
+}
+.pr_4 {
+  padding-right: 40px !important;
+}
+.pr_5 {
+  padding-right: 50px !important;
+}
+.pr_6 {
+  padding-right: 60px !important;
+}
+
+/* Margin Class */
+.mb_0 {
+  margin-bottom: 0 !important;
+}
+
+.btn_transparent {
+  border: 0;
+  background-color: transparent;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_primary {
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+  margin: auto;
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--theme-color);
+  border: 1px solid var(--theme-color);
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-medium);
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.btn_primary:hover {
+  background: var(--white);
+  color: var(--theme-color);
+  transition: all 0.3s ease;
+}
+
+.av-icon {
+  display: none;
+}
+
+.theme-color-path {
+  path: var(--theme-color);
+}
+
+.theme-color-fill {
+  fill: var(--theme-color);
+}

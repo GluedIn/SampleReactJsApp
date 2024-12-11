@@ -1,0 +1,493 @@
+@import url(./Variables.css);
+
+/* Main SidePanel Style Start */
+.side-fixed-panel-inner {
+  position: fixed;
+  top: 0;
+  right: -110%;
+  background: var(--white);
+  width: 100%;
+  max-width: 500px;
+  height: 100dvh;
+  padding: 30px;
+  box-shadow: 0px 0px 62px #00000014;
+  border-radius: 40px 0px 0px 0px;
+  z-index: 10000;
+  transition: 0.4s;
+}
+
+[dir="rtl"] .side-fixed-panel-inner {
+  left: -110%;
+  right: unset;
+  border-radius: 0px 40px 0px 0px;
+}
+
+.side-fixed-panel-inner.open {
+  right: 0;
+  overflow-y: auto;
+}
+
+[dir="rtl"] .side-fixed-panel-inner.open {
+  right: unset;
+  left: 0;
+}
+
+.side-fixed-panel .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 100;
+}
+
+.side-fixed-panel .overlay.open {
+  opacity: 1;
+  visibility: visible;
+  right: 0;
+  transition: 0.3s;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.panel-header li h4 {
+  font-size: var(--font-sz-lg);
+  font-weight: var(--font-wt-bold);
+  line-height: 30px;
+  color: var(--primary-black);
+  margin: 0;
+}
+
+.panel-header .popup-close {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 35px;
+  height: 35px;
+  background: var(--primary-black);
+  /* border: 1px solid rgb(221, 221, 221); */
+  border-radius: 50%;
+}
+
+[dir="rtl"] .panel-header .popup-close {
+  right: unset;
+  left: -5px;
+}
+
+.panel-header .popup-close svg {
+  width: 35px;
+  height: 35px;
+  flex: 0 0 35px;
+}
+/* Main SidePanel Style End */
+
+/* Main SidePanel Edit Profile Style Start */
+.panel-form {
+  height: calc(100dvh - 320px);
+  overflow-y: auto;
+}
+
+.panel-form::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.panel-profile {
+  margin-bottom: 35px;
+}
+
+.panel-profile .img-sec {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.panel-profile .img-sec img.bg-img-02 {
+  border-radius: 50%;
+}
+
+.panel-profile .img-sec span {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: 0px 0px 6px #00000017;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.panel-profile .img-sec span img {
+  width: 90px !important;
+  height: 50px !important;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+.panel-form label {
+  display: block;
+  font-size: var(--font-sz-md);
+  font-weight: var(--font-wt-semibold);
+  line-height: 24px;
+  margin-bottom: 8px;
+  color: var(--primary-black);
+}
+
+.panel-form input,
+.panel-form textarea {
+  border: 1px solid var(--secondary-gray);
+  border-radius: 4px;
+  height: 48px;
+  width: 100%;
+  background: var(--white);
+  padding: 12px;
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-medium);
+  color: var(--primary-black);
+  line-height: 24px;
+  outline: 0;
+}
+
+.panel-form textarea {
+  height: auto;
+}
+
+.panel-form .custom-form-group {
+  margin-bottom: 16px;
+}
+
+.panel-form .custom-btn-group {
+  width: 100%;
+  margin-bottom: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 30px 30px;
+  background-color: var(--white);
+}
+
+.panel-form input[type="submit"] {
+  width: 100%;
+  max-width: 230px;
+  height: 56px;
+  margin: auto;
+  border-radius: 30px;
+  border: 0;
+  background-color: var(--theme-color);
+  color: var(--white);
+  font-size: var(--font-sz-lg);
+  font-weight: var(--font-wt-semibold);
+  line-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-form input[type="submit"].delete-account-btn {
+  background-color: var(--primary-red);
+}
+/* Main SidePanel Edit Profile Style End */
+
+/* Main SidePanel Account Setting Style Start */
+.account-setting .drop-menu li {
+  border-bottom: 1px solid var(--secondary-gray);
+  padding: 12px 0px;
+}
+
+.account-setting .drop-menu li a {
+  font-size: var(--font-sz-sm);
+  font-weight: var(--font-wt-semibold);
+  line-height: 21px;
+  color: var(--primary-black);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-setting .drop-menu li span {
+  font-size: var(--font-sz-lg);
+}
+
+.account-setting .drop-menu li span svg path {
+  fill: var(--primary-black);
+}
+
+[dir="rtl"] .account-setting .drop-menu li a svg,
+[dir="rtl"] .account-setting .drop-menu li a span i {
+  transform: rotate(180deg);
+}
+
+.account-setting .drop-menu li a.delete-account {
+  color: var(--primary-red);
+}
+
+.account-setting .drop-menu li a.change-password:hover,
+.account-setting .drop-menu li a.change-password:hover svg path,
+.account-setting .drop-menu li a.languages:hover,
+.account-setting .drop-menu li a.languages:hover svg path {
+  color: var(--theme-color);
+  fill: var(--theme-color);
+}
+
+.account-setting .drop-menu li a.change-password:hover i.fa {
+  color: var(--theme-color);
+}
+
+.account-setting .drop-menu li a.delete-account i.fa,
+.account-setting .drop-menu li a.delete-account svg path {
+  fill: var(--theme-color);
+  color: var(--theme-color);
+  font-size: 20px;
+}
+
+.account-setting .drop-menu li a.change-password i.fa {
+  font-size: 20px;
+  color: var(--black);
+}
+
+#delete-account-alert .modal-dialog {
+  width: 20rem;
+}
+
+#delete-account-alert .modal-content {
+  border-radius: 15px;
+}
+
+#delete-account-alert .modal-body {
+  padding: 15px 22px;
+}
+
+#delete-account-alert .bottom-btn {
+  margin-top: 2rem;
+}
+
+#delete-account-alert .bottom-btn button.sure-btn {
+  color: var(--primary-red);
+  border: none;
+  background: none;
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+#delete-account-alert .bottom-btn button.cancel-btn {
+  color: var(--white);
+  background-color: var(--theme-color);
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 20px;
+  padding: 8px;
+}
+
+.act-stng-bckbtn {
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  top: 2px;
+}
+
+.act-stng-bckbtn svg path {
+  fill: var(--primary-black);
+}
+
+[dir="rtl"] .act-stng-bckbtn {
+  left: unset;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+.delete-account-section .password-error {
+  color: var(--primary-red);
+  font-size: 12px;
+  margin-top: 3px;
+  display: none;
+}
+
+.delete-account-section .password-incorrect {
+  color: var(--primary-red);
+  font-size: 12px;
+  margin-top: 3px;
+  display: none;
+}
+/* Main SidePanel Account Setting Style End */
+
+/* Activity Timeline Style Start */
+.activity-timeline .profile-page-header h5 {
+  flex: 1;
+  font-size: var(--font-sz-lg);
+  font-weight: var(--font-wt-bold);
+  line-height: 26px;
+  color: var(--primary-black);
+  text-align: center;
+}
+
+.activity-timeline .profile-page-header {
+  margin-bottom: 35px;
+  display: flex;
+  align-items: center;
+}
+
+[dir="rtl"] .activity-timeline .profile-page-header {
+  flex-direction: row-reverse;
+}
+
+.activity-timeline .profile-page-header a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--font-sz-md);
+  font-weight: var(--font-wt-semibold);
+  line-height: 24px;
+  color: var(--primary-black);
+}
+
+[dir="rtl"] .activity-timeline .profile-page-header a {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .activity-timeline .profile-page-header a svg {
+  transform: rotate(180deg);
+}
+
+.see_all_btn {
+  margin-bottom: 10px;
+  color: var(--theme-color);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.see_all_btn a {
+  vertical-align: middle;
+}
+
+.see_all_btn img {
+  width: 13px;
+  margin-left: 5px;
+}
+
+/* The Radio Container */
+.radio-container {
+  display: block;
+  position: relative;
+  padding-right: 35px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--secondary-gray);
+  cursor: pointer;
+  font-size: var(--font-sz-md);
+  font-weight: var(--font-wt-semibold);
+  line-height: 21px;
+  color: var(--primary-black);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+[dir="rtl"] .radio-container {
+  padding-right: 0;
+  padding-left: 35px;
+}
+
+/* Hide the browser's default radio button */
+.radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 24px;
+  width: 24px;
+  background-color: var(--white);
+  border: 1px solid var(--secondary-gray);
+  border-radius: 50%;
+}
+
+[dir="rtl"] .checkmark {
+  right: unset;
+  left: 0;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio-container input:checked ~ .checkmark {
+  border-color: var(--theme-color);
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .checkmark:after {
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--theme-color);
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (max-width: 768px) {
+  .activity-timeline .profile-page-header h5 {
+    font-size: var(--font-sz-sm);
+    font-weight: var(--font-wt-semibold);
+    line-height: 16px;
+  }
+
+  .activity-timeline .profile-page-header {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    position: relative;
+  }
+
+  .act-stng-bckbtn {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .panel-form input[type="submit"] {
+    max-width: 100%;
+    height: 48px;
+    font-size: var(--font-sz-md);
+  }
+}

@@ -1,0 +1,5 @@
+@import url(./Variables.css);
+
+.primary-bg-light {
+  background-color: var(--theme-color-light) !important;
+}
