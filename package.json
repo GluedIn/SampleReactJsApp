@@ -245,9 +245,6 @@
       "last 1 safari version"
     ]
   },
-  "overrides": {
-    "@babel/traverse": "7.22.6"
-  },
   "resolutions": {
     "@types/react": "18.2.6",
     "@types/react-dom": "18.0.11"
