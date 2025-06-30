@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 52 52">
+  <defs>
+    <filter id="Ellipse_40" x="0" y="0" width="52" height="52" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.09"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Close_Icon" data-name="Close Icon" transform="translate(-316 -127)">
+    <g transform="matrix(1, 0, 0, 1, 316, 127)" filter="url(#Ellipse_40)">
+      <circle id="Ellipse_40-2" data-name="Ellipse 40" cx="17" cy="17" r="17" transform="translate(9 9)" fill="#242424"/>
+    </g>
+    <path id="Path_16222" data-name="Path 16222" d="M11.637,10.3,16.3,5.637,17.637,6.97,12.97,11.637,17.637,16.3,16.3,17.637,11.637,12.97,6.97,17.637,5.637,16.3,10.3,11.637,5.637,6.97,6.97,5.637Z" transform="translate(330.363 141.363)" fill="#fff"/>
+  </g>
+</svg>

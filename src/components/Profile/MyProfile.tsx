@@ -1,25 +1,33 @@
+/*eslint-disable*/
 import { getLocalisedText } from "../../Helper/helper";
 import DotGrayIcon from "../../assets/icons/DotGrayIcon";
 import LeftArrowIcon from "../../assets/icons/LeftArrowIcon";
 import RepostIconWhite from "../../assets/icons/RepostIconWhite";
-import { CONTENT_TYPE } from "../../constants";
+import { CONTENT_TYPE, PAGE } from "../../constants";
 import { useTheme } from "../../contexts/Theme";
 import DeleteAccountModal from "../Login-UI/DeleteAccountModal";
 import CloseIcon from "../VerticalPlayer/Icons/Close";
 import EditIcon from "../VerticalPlayer/Icons/Edit";
 import FollowModal from "../common/FollowModal";
 import Loader from "../common/Loader";
+import LoaderWithText from "../common/LoaderWithText";
 import gluedin from "gluedin-shorts-js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+const LIMIT = 6;
+const initialLoadingState = {
+  page: false,
+  more: false,
+};
 
 function MyProfile() {
   const { t, i18n } = useTranslation();
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const navigate = useNavigate();
   const [userDetail, setUserDetail]: any = useState(null);
-  const [userVideos, setUserVideos] = useState([]);
+  const [userVideos, setUserVideos]: any = useState([]);
   const [userId, setUserId]: any = useState("");
   const [editProfile, setEditProfile]: any = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -34,6 +42,10 @@ function MyProfile() {
   const [showDeleteAccountModal, setDeleteAccountModal] = useState(false);
   const [followModal, setFollowModal] = useState({ show: false, type: "" });
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [userMetaData, setUserMetaData]: any = useState();
+
+  const observer = useRef<IntersectionObserver>();
   const [formData, setFormData] = useState({
     fullName: "",
     userName: "",
@@ -50,7 +62,7 @@ function MyProfile() {
   });
   const [errors, setErrors]: any = useState({});
   const [success, setSuccess]: any = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<any>(initialLoadingState);
   const hiddenFileInput: any = React.useRef(null);
 
   useEffect(() => {
@@ -63,7 +75,7 @@ function MyProfile() {
 
   useEffect(() => {
     async function fetchData(userId: string) {
-      setIsLoading(true);
+      setIsLoading((prev: any) => ({ ...prev, page: true }));
       try {
         let userModuleObj = new gluedin.GluedInUserModule();
         let userModuleResponse = await userModuleObj.getUserDetails(userId);
@@ -77,37 +89,95 @@ function MyProfile() {
             profileImageUrl: userInfo?.profileImageUrl,
           });
         }
-        setIsLoading(false);
+        setIsLoading(initialLoadingState);
       } catch (error) {
-        setIsLoading(false);
+        setIsLoading(initialLoadingState);
         console.error(error);
       }
     }
 
-    async function fetchVideos(userId: string) {
-      setIsLoading(true);
+    async function fetchMetaData(userId: string) {
       try {
-        let userModuleObj = new gluedin.GluedInUserModule();
-        var userVideoModuleResponse = await userModuleObj.getUserVideoList({
-          userId: userId,
-          offset: page,
-          limit: 10,
+        var UserModuleObj = new gluedin.GluedInFeedModule();
+        var userMetaData = await UserModuleObj.getMetadata({
+          type: "storyOwner",
+          ids: [userId],
         });
-        if (userVideoModuleResponse.status === 200) {
-          let videoList = userVideoModuleResponse.data.result;
-          setUserVideos(videoList);
+        if (userMetaData.status === 200) {
+          const userResponse = userMetaData.data.result;
+          setUserMetaData(userResponse?.storyOwner[0] || []);
         }
-        setIsLoading(false);
       } catch (error) {
-        setIsLoading(false);
-        console.error(error);
+        console.log(error);
       }
     }
+
     if (userId) {
-      fetchVideos(userId);
       fetchData(userId);
+      fetchMetaData(userId);
     }
   }, [userId]);
+
+  const lastElementRef = useCallback(
+    (node: any) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading.more) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore, isLoading.more]
+  );
+
+  useEffect(() => {
+    const loadMoreData = async () => {
+      try {
+        const newData = await fetchVideos(page);
+        setUserVideos((prevData: any) => {
+          const newVideos = newData.filter(
+            (newVideo: any) =>
+              !prevData.some(
+                (prevVideo: any) => prevVideo.videoId === newVideo.videoId
+              )
+          );
+          return [...prevData, ...newVideos];
+        });
+        if (newData.length === 0 || newData.length < LIMIT) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(initialLoadingState);
+      }
+    };
+
+    loadMoreData();
+  }, [page]);
+
+  async function fetchVideos(offset: number = 0) {
+    setIsLoading({ page: offset === 1, more: offset > 0 });
+    try {
+      let userModuleObj = new gluedin.GluedInUserModule();
+      var userVideoModuleResponse = await userModuleObj.getUserVideoList({
+        userId: userId,
+        offset: page,
+        limit: LIMIT,
+      });
+      if (userVideoModuleResponse.status === 200) {
+        let videoList = userVideoModuleResponse.data.result;
+        return videoList;
+      }
+      setIsLoading(initialLoadingState);
+    } catch (error) {
+      setIsLoading(initialLoadingState);
+      console.error(error);
+    }
+  }
 
   const toggleMoreOptions = () => {
     setEditMobileSetting(!showMoreOptions);
@@ -217,17 +287,23 @@ function MyProfile() {
     navigate("/sign-in");
   };
 
-  const updateProfile = async () => {
+  const updateProfile = async (updatedFormData?: any) => {
     var userModuleObj = new gluedin.GluedInUserModule();
-    var userModuleResponse = await userModuleObj.editUserProfile(formData);
-    if (userModuleResponse.status === 200) {
-      setSuccess({ sucessMessage: "Profile has been updated successfully!" });
-      setErrors({});
-      setTimeout(() => setSuccess({}), 5000);
-    } else {
-      setSuccess({});
-      setErrors({ errorMessage: userModuleResponse?.data?.statusMessage });
-      setTimeout(() => setErrors({}), 5000);
+    try {
+      var userModuleResponse = await userModuleObj.editUserProfile(
+        formData
+      );
+      if (userModuleResponse?.status === 200) {
+        setSuccess({ sucessMessage: "Profile has been updated successfully!" });
+        setErrors({});
+        setTimeout(() => setSuccess({}), 5000);
+      } else {
+        setSuccess({});
+        setErrors({ errorMessage: userModuleResponse?.data?.statusMessage });
+        setTimeout(() => setErrors({}), 5000);
+      }
+    } catch (error) {
+      console.log("Error", error);
     }
   };
 
@@ -264,22 +340,28 @@ function MyProfile() {
       userModuleResponse.status === 200 ||
       userModuleResponse.status === 201
     ) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        profileImageUrl: userModuleResponse?.data?.result?.imageUrl,
-      }));
-      setUserDetail("");
+      const updatedImageUrl = userModuleResponse?.data?.result?.imageUrl;
+      setFormData((prevFormData) => {
+        const updatedFormData = {
+          ...prevFormData,
+          profileImageUrl: updatedImageUrl,
+        };
+
+        // Call updateProfile with updatedFormData to ensure latest state is used
+        updateProfile(updatedFormData);
+        return updatedFormData;
+      });
       setUserDetail((prevUserDetail: any) => ({
         ...prevUserDetail,
-        profileImageUrl: userModuleResponse?.data?.result?.imageUrl,
+        profileImageUrl: updatedImageUrl,
       }));
     } else {
       console.log("Something went wrong, please try again");
     }
   };
 
-  const toBase64 = (file: any) => {
-    new Promise((resolve, reject) => {
+  const toBase64 = (file: any): Promise<string | ArrayBuffer | null> => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
@@ -334,7 +416,7 @@ function MyProfile() {
   };
 
   const changeLanguage = (language: any) => {
-    setIsLoading((prev) => !prev);
+    setIsLoading((prev: any) => !prev);
     i18n.changeLanguage(language);
     localStorage.setItem("defaultLanguage", language);
     setSelectedLanguage(language);
@@ -345,10 +427,10 @@ function MyProfile() {
     setEditAccountSetting(false);
     setLanguage(false);
     setShowOverlay(false);
-    setIsLoading(false);
+    setIsLoading(initialLoadingState);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading.page) return <Loader />;
 
   return (
     <>
@@ -500,13 +582,33 @@ function MyProfile() {
           <ul className="profile-page-head-ul list-none">
             <li className="profile-page-head-avatar">
               <div className="img-sec">
-                <img
-                  src={
-                    userDetail?.profileImageUrl || "/gluedin/images/Profile.png"
-                  }
-                  id="profileImage"
-                  className="bg-img-02 profileImage"
-                />
+                {userMetaData && userMetaData?.stories?.length > 0 ? (
+                  <a
+                    href={`story-view/${userMetaData?.userId}?type=${PAGE.PROFILE}`}
+                  >
+                    <img
+                      src={userDetail?.profileImageUrl}
+                      alt=""
+                      style={{
+                        borderColor:
+                          userMetaData?.stories?.length > 0
+                            ? "#0033FF"
+                            : "#fff",
+                      }}
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={
+                      userDetail?.profileImageUrl ||
+                      "/gluedin/images/Profile.png"
+                    }
+                    id="profileImage"
+                    className="bg-img-02 profileImage"
+                    alt=""
+                  />
+                )}
+
                 <span onClick={toggleEditProfilePanel}>
                   <svg
                     id="editIcon"
@@ -626,13 +728,17 @@ function MyProfile() {
         <div className="inner-box arrival-box profile-videos">
           <div id="tabs-content">
             <div className="tab-content userVideoData" id="tab1">
-              {userVideos.map((video: any) => {
+              {userVideos?.map((video: any) => {
                 let thumbnailUrls = video.thumbnailUrls
                   ? video.thumbnailUrls[0]
                   : video.thumbnailUrl;
                 if (video.contentType === "video") {
                   return (
-                    <div className="box" key={video.videoId}>
+                    <div
+                      className="box"
+                      key={video.videoId}
+                      ref={lastElementRef}
+                    >
                       <div
                         className="img-box open-video-detail"
                         id={video.videoId}
@@ -658,23 +764,24 @@ function MyProfile() {
                     </div>
                   );
                 } else {
-                  return (
-                    <div className="box">
-                      <div
-                        className="img-box open-video-detail text-wrapper"
-                        style={{
-                          background: "#fff",
-                          borderRadius: "8px",
-                        }}
-                        id={video.videoId}
-                      >
-                        <span className="av-icon">
-                          <img src="../gluedin/images/Text.svg" alt="" />
-                        </span>
-                        <p>{getLocalisedText(video, "description")}</p>
-                      </div>
-                    </div>
-                  );
+                  return null;
+                  //   return (
+                  //     <div className="box">
+                  //       <div
+                  //         className="img-box open-video-detail text-wrapper"
+                  //         style={{
+                  //           background: "#fff",
+                  //           borderRadius: "8px",
+                  //         }}
+                  //         id={video.videoId}
+                  //       >
+                  //         <span className="av-icon">
+                  //           <img src="../gluedin/images/Text.svg" alt="" />
+                  //         </span>
+                  //         <p>{getLocalisedText(video, "description")}</p>
+                  //       </div>
+                  //     </div>
+                  //   );
                 }
               })}
             </div>
@@ -739,7 +846,7 @@ function MyProfile() {
             )}
 
             <div className="custom-form-group first-input-box">
-              <label>{t("full-name")}**</label>
+              <label>{t("full-name")}*</label>
               <input
                 type="text"
                 name="fullName"
@@ -759,7 +866,7 @@ function MyProfile() {
             </div>
 
             <div className="custom-form-group">
-              <label>{t("label-about")}</label>
+              <label>{t("label-about")}*</label>
               <textarea
                 rows={4}
                 name="description"

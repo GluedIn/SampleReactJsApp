@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const useIsMobile = (mobileScreenSize = 991) => {
+const useIsMobile = (mobileScreenSize = 576) => {
   if (typeof window.matchMedia !== "function") {
     throw Error("matchMedia not supported by browser!");
   }

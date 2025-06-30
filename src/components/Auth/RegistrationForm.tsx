@@ -60,8 +60,8 @@ function RegistrationForm() {
       formData.termConditionAccepted = true;
       var userSignUpResponse = await authLoginInput.SignupRawData(formData);
       const responseError: any = {};
-      if (userSignUpResponse.status == 200) {
-        if (userSignUpResponse.data.statusCode == 2003) {
+      if (userSignUpResponse.status === 200) {
+        if (userSignUpResponse.data.statusCode === 2003) {
           formData.fullName = "";
           formData.email = "";
           formData.password = "";
@@ -158,7 +158,7 @@ function RegistrationForm() {
               <span onClick={togglePassword}>
                 {" "}
                 {passwordType === "password" ? (
-                  <img src="./gluedin/images/eye.svg" />
+                  <img src="./gluedin/images/eye.svg" alt=""/>
                 ) : (
                   <i className="fa fa-eye-slash"></i>
                 )}
@@ -180,9 +180,9 @@ function RegistrationForm() {
           <div className="input-grp text-center">
             <div className="link-text" style={{ display: `block` }}>
               <span>{t("text-account")}</span>&nbsp;
-              <a href="/vertical-player" className="link">
+              <Link to="/vertical-player" className="link">
                 {t("guest-Login")}
-              </a>
+              </Link>
             </div>
           </div>
         </form>

@@ -1,48 +1,46 @@
-import DeleteGrayIcon from "../../assets/icons/DeleteGrayIcon";
-import EditIcon from "../../assets/icons/EditIcon";
 import LeftArrowIcon from "../../assets/icons/LeftArrowIcon";
-import PlusIcon from "../../assets/icons/PlusIcon";
 import RightArrowIcon from "../../assets/icons/RightArrowIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";
 import SoundIcon from "../../assets/icons/SoundIcon";
 import { TOAST_TYPES } from "../../constants";
 import { useNotification } from "../../contexts/Notification";
-import CloseIcon from "../VerticalPlayer/Icons/Close";
 import CustomModal from "../common/CustomModal/CustomModal";
 import LoaderDark from "../common/LoaderDark/LoaderDark";
 import "./CreatePost.css";
-import ImageUploadLoader from "./Loader";
+import Input from "./Input";
+import InputWithChips from "./InputWithChips";
+import Loader from "./Loader";
+import SidePanel from "./SidePanel";
 import gluedin from "gluedin-shorts-js";
-import debounce from "lodash/debounce";
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-const soundModule = new gluedin.GluedInSoundModule();
 
 function CreatePostStepTwo() {
   const defaultLanguage = localStorage.getItem("defaultLanguage");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRepost = searchParams.get("repost") === "true";
+  const isHashtag = searchParams.get("hashtag") === "true";
+  const contentType = searchParams.get("contentType");
+  const music = searchParams.get("music") === "true";
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
   const [currentVideoBlobList, setCurrentVideoBlobList] = useState<any>([]);
   const [currentVideoList, setCurrentVideoList] = useState<any>([]);
   const [categoryOptions, setCategoryOptions] = useState<any>([]);
+  const [showTagPanel, setShowTagPanel] = useState({
+    sound: false,
+    hashtag: false,
+    user: false,
+  });
   const [isTermsChecked, setIsTermsChecked] = useState(isRepost ? true : false);
-  const [showSoundPanel, setShowSoundPanel] = useState(false);
-  const [soundsList, setSoundsList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [taggedSound, setTaggedSound] = useState<any>({});
-  const [showSearch, setShowSearch] = useState(true);
-  const [loading, setLoading] = useState(false);
   const { showNotification } = useNotification();
   const inputRef = useRef(null);
-  const [descriptionValue, setDescriptionValue] = useState("");
-  const [titleValue, setTitleValue] = useState("");
+  const videoRef = useRef(null);
+  const [show, setShow] = useState(false);
+  const videoList = isRepost ? currentVideoList : currentVideoBlobList;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -60,11 +58,48 @@ function CreatePostStepTwo() {
     repost: false,
     soundId: "",
     soundName: "",
+    taggedUsers: [],
+    hashtags: Array(0),
+    sounds: [],
+    // contentType: contentType,
+    ...(contentType ? { contentType } : {}),
   });
 
   useEffect(() => {
+    const useHashtag = localStorage.getItem("hashtag");
+
+    async function fetchData() {
+      if (isHashtag) {
+        try {
+          const hashTagModuleObj = new gluedin.GluedInHashTag();
+          let limit = 10;
+          let offset = 1;
+          const hashTagResponse = await hashTagModuleObj.getHashTagDetails({
+            limit: limit,
+            offset: offset,
+            name: useHashtag,
+          });
+          if (hashTagResponse?.status === 200)
+            if (useHashtag) {
+              let hashtagObj = hashTagResponse.data.result.hashtag;
+              setFormData((prevFormData) => ({
+                ...prevFormData,
+                hashtags: [hashtagObj],
+              }));
+            }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+    fetchData();
+  }, [isHashtag]);
+
+  useEffect(() => {
     const storedVideosBlobs = sessionStorage.getItem("blobUrls");
-    const storedVideoUrls = sessionStorage.getItem("videoUrls");
+    const storedVideoUrls = sessionStorage.getItem(
+      contentType && contentType === "image" ? "imageUrls" : "videoUrls"
+    );
     if (!storedVideosBlobs) {
       navigate("/create-post");
       return;
@@ -75,9 +110,15 @@ function CreatePostStepTwo() {
     setCurrentVideoBlobList(blobsList);
     setFormData((prevFormData: any) => ({
       ...prevFormData,
-      contentUrl: { type: "video", urls: videosList },
+      contentUrl: [
+        {
+          type: contentType && contentType === "image" ? "image" : "video",
+          urls: videosList,
+        },
+      ],
       s3Url: videosList[0],
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -105,12 +146,6 @@ function CreatePostStepTwo() {
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
 
-    // Update specific state based on the input field name
-    if (name === "description") {
-      setDescriptionValue(value);
-    } else if (name === "title") {
-      setTitleValue(value);
-    }
     // Prevent spacebar input when the field is empty
     if (/^\s*$/.test(value)) {
       setFormData((prevFormData) => ({ ...prevFormData, [name]: "" }));
@@ -242,12 +277,19 @@ function CreatePostStepTwo() {
               );
 
               const newVideoList = [videoUrl];
-              //   sessionStorage.setItem("videoUrls", JSON.stringify(newVideoList));
               setCurrentVideoBlobList([videoUrlBlob]);
               setCurrentVideoList(newVideoList);
               setFormData((prevFormData: any) => ({
                 ...prevFormData,
-                contentUrl: { type: "video", urls: newVideoList },
+                contentUrl: [
+                  {
+                    type:
+                      contentType && contentType === "image"
+                        ? "image"
+                        : "video",
+                    urls: newVideoList,
+                  },
+                ],
               }));
             })
             .then((result) => {
@@ -281,7 +323,6 @@ function CreatePostStepTwo() {
     const newErrors: any = {};
 
     if (currentVideoList.length === 0) {
-      //alert("Please select media content");
       newErrors.contentVideo = t("media-valid");
     }
 
@@ -320,22 +361,24 @@ function CreatePostStepTwo() {
         formData.repost = true;
       }
 
+      const { sounds, ...restFormData } = formData ?? {};
+      const payload = { ...restFormData };
+
       setIsLoading(true);
       const feedModuleObj = new gluedin.GluedInFeedModule();
-      let feedModuleResponse = await feedModuleObj.uploadContent(formData);
+      let feedModuleResponse = await feedModuleObj.uploadContent(payload);
       if (
         feedModuleResponse.status === 200 ||
         feedModuleResponse.status === 201
       ) {
         sessionStorage.removeItem("videoUrl");
+        localStorage.removeItem("hashtag");
         setIsLoading(false);
         showNotification({
           title: "Create Content",
           subTitle: feedModuleResponse.data.statusMessage,
           type: TOAST_TYPES.SUCCESS,
         });
-        setDescriptionValue("");
-        setTitleValue("");
         navigate("/vertical-player");
       } else {
         setIsLoading(false);
@@ -358,242 +401,209 @@ function CreatePostStepTwo() {
     setCurrentVideoList(updatedVideoList);
     setFormData((prevFormData: any) => ({
       ...prevFormData,
-      contentUrl: { type: "video", urls: updatedVideoList },
+      contentUrl: [
+        {
+          type: contentType && contentType === "image" ? "image" : "video",
+          urls: updatedVideoList,
+        },
+      ],
     }));
   };
 
-  const soundPanelHandler = () => {
-    setShowSoundPanel(!showSoundPanel);
+  const togglePanel = (type: any) => {
+    setShowTagPanel((prev) => ({
+      ...prev,
+      ...(type === "sound" && { sound: !prev.sound }),
+      ...(type === "user" && { user: !prev.user }),
+      ...(type === "hashtag" && { hashtag: !prev.hashtag }),
+    }));
   };
 
-  const [show, setShow] = useState(false);
+  const handleRemoveHashtag = (hashtag: any) => {
+    const indexToRemove = formData.hashtags.findIndex(
+      (taggedHashtag: any) => taggedHashtag.id === hashtag.id
+    );
+    if (indexToRemove !== -1) {
+      formData.hashtags.splice(indexToRemove, 1);
+    }
+    setFormData((prev: any) => ({
+      ...prev,
+      hashtags: [...formData.hashtags],
+    }));
+  };
+
+  const handleRemoveUser = (user: any) => {
+    const indexToRemove = formData.taggedUsers.findIndex(
+      (taggedUser: any) => taggedUser.id === user.id
+    );
+    if (indexToRemove !== -1) {
+      formData.taggedUsers.splice(indexToRemove, 1);
+    }
+    setFormData((prev: any) => ({
+      ...prev,
+      taggedUsers: [...formData.taggedUsers],
+    }));
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  useEffect(() => {
-    async function fetchSoundList() {
-      try {
-        const response = await soundModule.getSoundList("");
-        const { data: { result = [] } = {}, status } = response;
-        if (status === 200) {
-          setSoundsList(result);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchSoundList();
-  }, []);
-
-  // Debounce function to delay the execution of the search function
-  const delayedSearch = debounce(async (term) => {
-    setLoading(true);
-    const filteredSoundsList = soundsList.filter((item: any) =>
-      item.title.toLowerCase().includes(term.toLowerCase())
-    );
-    setSoundsList(soundsList);
-    setSearchResults(filteredSoundsList);
-    setLoading(false);
-
-    if (term.length > 0 && filteredSoundsList.length === 0) {
-      setShowSearch(false);
-    } else {
-      setShowSearch(true);
-    }
-  }, 500); // Adjust the delay time as needed
-
-  useEffect(() => {
-    if (searchTerm) {
-      delayedSearch(searchTerm);
-    } else {
-      setSearchResults([]);
-    }
-    // Clean up the debounce function on component unmount
-    return delayedSearch.cancel;
-  }, [searchTerm]);
-
-  const handleSearchInputChange = (event: any) => {
-    setSearchTerm(event.target.value);
-    if (event.target.value.length === 0) {
-      setShowSearch(true);
-    }
-  };
-
-  const handleSoundTag = (sound: any) => {
-    setFormData((prevFormData: any) => ({
-      ...prevFormData,
-      soundId: sound.soundId,
-      soundName: sound.title,
-    }));
-    setTaggedSound(sound);
-    setShowSoundPanel(false);
-    showNotification({
-      title: "Tag Sound",
-      subTitle: "The sound has been tagged",
-    });
-  };
-
-  const handleRemoveTaggedSound = () => {
-    setFormData((prevFormData: any) => ({
-      ...prevFormData,
-      soundId: "",
-      soundName: "",
-    }));
-    setTaggedSound({});
-    setShowSoundPanel(false);
-    showNotification({
-      title: "Tag Sound",
-      subTitle: "The sound has been deleted",
-    });
-  };
-
   return (
     <>
+      {isLoading && <Loader />}
       <div className="full-box create-full-box">
-        <div className="back-header">
-          <ul className="list">
-            <li className="back-btn">
-              <button
-                className="back-btn-a"
-                onClick={() => navigate(-1)}
-                style={{
-                  background: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  border: "none",
-                  gap: 5,
-                }}
-              >
-                {defaultLanguage === "en" ? (
-                  <LeftArrowIcon />
-                ) : (
-                  <RightArrowIcon />
-                )}
-                {t("back-btn")}
-              </button>
-            </li>
-            <li className="common-heading">
-              {t(isRepost ? "create-repost" : "create-post")}
-            </li>
-          </ul>
+        <div className="main_header">
+          <button onClick={() => navigate(-1)} className="btn_back">
+            {defaultLanguage === "en" ? <LeftArrowIcon /> : <RightArrowIcon />}
+            {t("back-btn")}
+          </button>
+          <h2 className="main_heading">
+            {t(isRepost ? "create-repost" : "create-post")}
+          </h2>
         </div>
-        <div className="creat-full mt-t-60">
-          <div className="creat-box-02">
+        <div className="creat-full mt-4">
+          <div className="creat-box-02 p-0">
             <div className="img-sec">
               <div className="img-box upload-content">
-                <video
-                  src={isRepost ? currentVideoList[0] : currentVideoBlobList[0]}
-                  className="full"
-                  controls
-                ></video>
+                {contentType !== "image" || music ? (
+                  <video
+                    ref={videoRef}
+                    src={currentVideoList[0]}
+                    className="full"
+                    controls
+                  ></video>
+                ) : (
+                  <img ref={videoRef} src={currentVideoList[0]} alt="" />
+                )}
               </div>
               <div className="creat-add-btn mt-t-15">
                 <form action="" method="POST" encType="multipart/form-data">
                   <ul>
-                    {(isRepost ? currentVideoList : currentVideoBlobList).map(
-                      (_video: any, index: any) => (
-                        <li key={index}>
-                          <div className="inner-box">
-                            <video src={_video}></video>
-                          </div>
-                          {/* <span
-                          className="remove-video"
-                          onClick={() => removeImageItem(index)}
+                    {/* {videoList?.map((videoUrl: string) => (
+                      <li key={videoUrl}>
+                        <div className="inner-box">
+                          <video src={videoUrl}></video>
+                        </div>
+                      </li>
+                    ))} */}
+                    {!isRepost && !contentType && (
+                      <li className="upload-content-block">
+                        <svg
+                          id="editIcon"
+                          className="edit-profile"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="17.023"
+                          height="17.023"
+                          viewBox="0 0 17.023 17.023"
                         >
-                          <i className="fa fa-times"></i>
-                        </span> */}
-                        </li>
-                      )
-                    )}
-                    <li className="upload-content-block">
-                      {/* <img src="/gluedin/images/creat-add.svg" alt="" /> */}
-                      <svg
-                        id="editIcon"
-                        className="edit-profile"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17.023"
-                        height="17.023"
-                        viewBox="0 0 17.023 17.023"
-                      >
-                        <path
-                          id="Path_18515"
-                          data-name="Path 18515"
-                          d="M15.057,9.225l-1.34-1.34L4.895,16.709v1.34h1.34Zm1.34-1.34,1.34-1.34L16.4,5.206l-1.34,1.34ZM7.019,19.943H3V15.924L15.727,3.2a.947.947,0,0,1,1.34,0l2.679,2.679a.947.947,0,0,1,0,1.34Z"
-                          transform="translate(-3 -2.919)"
-                          fill="#E95F2A"
+                          <path
+                            id="Path_18515"
+                            data-name="Path 18515"
+                            d="M15.057,9.225l-1.34-1.34L4.895,16.709v1.34h1.34Zm1.34-1.34,1.34-1.34L16.4,5.206l-1.34,1.34ZM7.019,19.943H3V15.924L15.727,3.2a.947.947,0,0,1,1.34,0l2.679,2.679a.947.947,0,0,1,0,1.34Z"
+                            transform="translate(-3 -2.919)"
+                            fill="#03f"
+                          />
+                        </svg>
+                        <input
+                          type="file"
+                          name=""
+                          className="file-upload-btn-input dropzone"
+                          accept=".mp4,.m3u8"
+                          onChange={handleFileUploadChange}
                         />
-                      </svg>
-                      <input
-                        type="file"
-                        name=""
-                        className="file-upload-btn-input dropzone"
-                        accept=".mp4,.m3u8"
-                        onChange={handleFileUploadChange}
-                      />
-                    </li>
+                      </li>
+                    )}
                   </ul>
                 </form>
               </div>
-
-              <button
-                className="btn_sound btn_transparent"
-                onClick={soundPanelHandler}
-              >
-                {taggedSound.soundId ? (
-                  <div>{taggedSound.title}</div>
-                ) : (
-                  <>
-                    <SoundIcon />
-                    Tag Sound
-                  </>
-                )}
-              </button>
+              {!contentType && (
+                <button
+                  className="btn_sound btn_transparent"
+                  onClick={() => togglePanel("sound")}
+                >
+                  {formData.soundId ? (
+                    <div>{formData.soundName}</div>
+                  ) : (
+                    <>
+                      <SoundIcon />
+                      Tag Sound
+                    </>
+                  )}
+                </button>
+              )}
             </div>
 
             <div className="content-sec">
-              {/* {isLoading && <ImageUploadLoader />} */}
               <form className="creat-box-02-form" onSubmit={handlePostSubmit}>
                 <div className="input-grp first-input-box">
                   <label>{t("label-title")}</label>
-                  <input
+                  <Input
                     type="text"
-                    maxLength={50}
-                    className="custom-input"
                     name="title"
+                    placeholder={t("add-title-placeholder")}
+                    maxLength={50}
                     value={formData.title}
                     onChange={handleInputChange}
+                    error={errors.title}
                   />
                   <div className="input-grp-row">
                     {errors.title && (
                       <span className="error">{errors.title}</span>
                     )}
-                    <div className="word-count">
-                      <span id="write-count">{titleValue.length}</span>/
-                      <span id="total-count">50</span>
-                    </div>
                   </div>
                 </div>
                 <div className="input-grp mt-t-30">
                   <label>{t("label-description")}</label>
-                  <textarea
-                    rows={4}
+                  <Input
+                    type="text"
+                    rows={1}
                     maxLength={200}
-                    className="custom-input"
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
-                  ></textarea>
+                    placeholder={t("add-desc-placeholder")}
+                    error={errors.description}
+                  />
                   <div className="input-grp-row">
                     {errors.description && (
                       <span className="error">{errors.description}</span>
                     )}
-                    <div className="word-count">
-                      <span id="write-count">{descriptionValue.length}</span>/
-                      <span id="total-count">200</span>
-                    </div>
                   </div>
                 </div>
+                <div className="input-grp mt-t-30">
+                  <label>Tag Friends</label>
+                  <InputWithChips
+                    type="text"
+                    name="taggedUsers"
+                    value={formData.taggedUsers.reduce(
+                      (acc, item: any, index) =>
+                        `${acc}${index !== 0 ? "," : ""} @${item.subTitle}`,
+                      ""
+                    )}
+                    values={formData.taggedUsers}
+                    onRemoveValue={handleRemoveUser}
+                    onClick={() => togglePanel("user")}
+                    placeholder="Tag Friends"
+                  />
+                </div>
+
+                <div className="input-grp mt-t-30">
+                  <label>Add Hashtags</label>
+                  <InputWithChips
+                    type="text"
+                    name="hashtags"
+                    value={formData.hashtags.reduce(
+                      (acc, item: any, index) =>
+                        `${acc}${index !== 0 ? "," : ""} #${item.title}`,
+                      ""
+                    )}
+                    values={formData.hashtags}
+                    onRemoveValue={handleRemoveHashtag}
+                    onClick={() => togglePanel("hashtag")}
+                    placeholder="Add Hashtags"
+                  />
+                </div>
+
                 <div className="input-grp mt-t-30">
                   <label>{t("label-choose-category")}</label>
                   <select
@@ -630,46 +640,73 @@ function CreatePostStepTwo() {
                     </div>
                   </div>
 
-                  {/* Likes Action */}
-                  <div className="toggle-container">
-                    <h4 className="toggle-title">{t("label-like")}</h4>
-                    <label className="toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={formData.likeEnabled}
-                        onChange={likeToggleHandler}
-                        disabled={isRepost}
-                      />
-                      <span className="slider round"></span>
-                    </label>
-                  </div>
+                  <div className="input-grp">
+                    {/* Likes Action */}
+                    <div
+                      className={`toggle-container ${
+                        isRepost ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <h4 className="toggle-title">{t("label-post-like")}</h4>
+                      <label className="toggle-switch">
+                        <input
+                          type="checkbox"
+                          checked={formData.likeEnabled}
+                          onChange={likeToggleHandler}
+                          disabled={isRepost}
+                        />
+                        <span
+                          className={`slider round ${
+                            isRepost ? "cursor-not-allowed" : ""
+                          }`}
+                        ></span>
+                      </label>
+                    </div>
+                    {/* Comments Action */}
+                    <div
+                      className={`toggle-container ${
+                        isRepost ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <h4 className="toggle-title">
+                        {t("label-post-comment")}
+                      </h4>
+                      <label className="toggle-switch">
+                        <input
+                          type="checkbox"
+                          checked={formData.commentEnabled}
+                          onChange={commentToggleHandler}
+                          disabled={isRepost}
+                        />
+                        <span
+                          className={`slider round ${
+                            isRepost ? "cursor-not-allowed" : ""
+                          }`}
+                        ></span>
+                      </label>
+                    </div>
 
-                  {/* Comments Action */}
-                  <div className="toggle-container">
-                    <h4 className="toggle-title">{t("label-comment")}</h4>
-                    <label className="toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={formData.commentEnabled}
-                        onChange={commentToggleHandler}
-                        disabled={isRepost}
-                      />
-                      <span className="slider round"></span>
-                    </label>
-                  </div>
-
-                  {/* Share Action */}
-                  <div className="toggle-container">
-                    <h4 className="toggle-title">{t("label-share")}</h4>
-                    <label className="toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={formData.shareEnabled}
-                        onChange={shareToggleHandler}
-                        disabled={isRepost}
-                      />
-                      <span className="slider round"></span>
-                    </label>
+                    {/* Share Action */}
+                    <div
+                      className={`toggle-container ${
+                        isRepost ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <h4 className="toggle-title">{t("label-post-share")}</h4>
+                      <label className="toggle-switch">
+                        <input
+                          type="checkbox"
+                          checked={formData.shareEnabled}
+                          onChange={shareToggleHandler}
+                          disabled={isRepost}
+                        />
+                        <span
+                          className={`slider round ${
+                            isRepost ? "cursor-not-allowed" : ""
+                          }`}
+                        ></span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -703,6 +740,7 @@ function CreatePostStepTwo() {
                         type="submit"
                         className="new-custom-btn-b upload-content flex justify-center items-center disabled:opacity-50 gap-2"
                         disabled={isLoading}
+                        onClick={handlePostSubmit}
                       >
                         {isLoading && <LoaderDark />}
                         {t(isRepost ? "btn-upload-repost" : "btn-upload-post")}
@@ -716,125 +754,94 @@ function CreatePostStepTwo() {
         </div>
       </div>
 
-      <div
-        className={`side-fixed-panel-inner sound-panel ${
-          showSoundPanel ? "open" : ""
-        }`}
-      >
-        <ul className="panel-header">
-          <li>
-            <h4>Tag Sound</h4>
-          </li>
-          <li>
-            <button className="popup-close" onClick={soundPanelHandler}>
-              <CloseIcon />
-            </button>
-          </li>
-        </ul>
-        <div className="full-box">
-          <div className="page-search-box">
-            <div className="input-box">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchInputChange}
-                name="search"
-                placeholder="Search Sound..."
-                autoComplete="off"
-              />
-              <img
-                src="./gluedin/images/search-icon.svg"
-                className="search-info"
-                alt=""
-              />
-            </div>
-          </div>
-        </div>
+      {showTagPanel.sound && (
+        <SidePanel
+          title="Sound"
+          open={showTagPanel.sound}
+          onClose={() => togglePanel("sound")}
+          fetchOptions={{
+            itemKeys: {
+              id: "soundId",
+              thumbnail: "thumbnail",
+              title: "title",
+              subTitle: "artist",
+            },
+          }}
+          handleTag={(sound: any) =>
+            setFormData((prev: any) => ({
+              ...prev,
+              sounds: [...prev.sounds, sound],
+              soundId: sound.soundId,
+              soundName: sound.title,
+            }))
+          }
+          handleRemove={(sound: any) => {
+            const indexToRemove = formData.sounds.findIndex(
+              (taggedSound: any) => taggedSound.id === sound.id
+            );
+            if (indexToRemove !== -1) {
+              formData.sounds.splice(indexToRemove, 1);
+            }
+            setFormData((prev: any) => ({
+              ...prev,
+              sounds: [...formData.sounds],
+              soundId: null,
+              soundName: null,
+            }));
+          }}
+          taggedItems={formData.sounds}
+        />
+      )}
 
-        {loading && <LoaderDark />}
+      {showTagPanel.hashtag && (
+        <SidePanel
+          title="Hashtag"
+          open={showTagPanel.hashtag}
+          onClose={() => togglePanel("hashtag")}
+          fetchOptions={{
+            itemKeys: {
+              id: "hashtagId",
+              thumbnail: "image",
+              title: "title",
+              subTitle: "status",
+            },
+          }}
+          handleTag={(hashtag: any) =>
+            setFormData((prev: any) => ({
+              ...prev,
+              hashtags: [...prev.hashtags, hashtag],
+            }))
+          }
+          handleRemove={handleRemoveHashtag}
+          taggedItems={formData.hashtags}
+          multiple
+        />
+      )}
 
-        {!showSearch && searchResults.length === 0 && (
-          <p>No search result found!</p>
-        )}
-
-        {searchResults.length > 0 && (
-          <ul className="panel-list">
-            {searchResults.map((sound: any) => (
-              <li key={sound.soundId} className="panel-list-item">
-                <div className="sound">
-                  <div className="sound-image">
-                    <img src={sound.thumbnail} alt="" />
-                  </div>
-                  <div className="sound-info">
-                    <h4 className="sound-title">{sound.title}</h4>
-                    <p className="sound-artist">{sound.artist}</p>
-                  </div>
-                </div>
-                <div className="sound-actions">
-                  {taggedSound.soundId !== sound.soundId ? (
-                    <button
-                      className="sound-actions-btn btn_transparent"
-                      onClick={() => handleSoundTag(sound)}
-                    >
-                      <PlusIcon />
-                    </button>
-                  ) : (
-                    <button
-                      className="sound-actions-btn btn_transparent"
-                      onClick={() => handleRemoveTaggedSound()}
-                    >
-                      <DeleteGrayIcon />
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {showSearch && searchResults.length === 0 && soundsList.length > 0 && (
-          <ul className="panel-list">
-            {soundsList.map((sound: any) => (
-              <li key={sound.soundId} className="panel-list-item">
-                <div className="sound">
-                  <div className="sound-image">
-                    <img src={sound.thumbnail} alt="" />
-                  </div>
-                  <div className="sound-info">
-                    <h4 className="sound-title">{sound.title}</h4>
-                    <p className="sound-artist">{sound.artist}</p>
-                  </div>
-                </div>
-                <div className="sound-actions">
-                  {taggedSound.soundId !== sound.soundId ? (
-                    <button
-                      className="sound-actions-btn btn_transparent"
-                      onClick={() => handleSoundTag(sound)}
-                    >
-                      <PlusIcon />
-                    </button>
-                  ) : (
-                    <button
-                      className="sound-actions-btn btn_transparent"
-                      onClick={() => handleRemoveTaggedSound()}
-                    >
-                      <DeleteGrayIcon />
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {searchResults.length === 0 && soundsList.length === 0 && (
-          <p>No results found!</p>
-        )}
-      </div>
-
-      <div className="side-fixed-panel">
-        <div className={`overlay ${showSoundPanel ? "open" : ""}`}></div>
-      </div>
+      {showTagPanel.user && (
+        <SidePanel
+          title="Friend"
+          open={showTagPanel.user}
+          onClose={() => togglePanel("user")}
+          fetchOptions={{
+            itemKeys: {
+              id: "userId",
+              thumbnail: "profileImageUrl",
+              title: "fullName",
+              subTitle: "userName",
+            },
+          }}
+          handleTag={(user: any) =>
+            setFormData((prev: any) => ({
+              ...prev,
+              taggedUsers: [...prev.taggedUsers, user],
+            }))
+          }
+          handleRemove={handleRemoveUser}
+          taggedItems={formData.taggedUsers}
+          multiple
+        />
+      )}
 
       <CustomModal isOpen={show} close={handleClose}>
         <h2 className="modal-titl">Post Setting Info</h2>

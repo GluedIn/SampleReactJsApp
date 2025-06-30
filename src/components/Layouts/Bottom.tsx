@@ -2,15 +2,18 @@ import DiscoverIcon from "../../assets/icons/DiscoverIcon";
 import HomeIcon from "../../assets/icons/HomeIcon";
 import NotificationIcon from "../../assets/icons/NotificationIcon";
 import ProfileIcon from "../../assets/icons/ProfileIcon";
+import { useConfig } from "../../contexts/Config/configContext";
 import { useLoginModalContext } from "../../contexts/LoginModal";
 import gluedin from "gluedin-shorts-js";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Bottom() {
   const navigate = useNavigate();
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const { setShowLoginModal } = useLoginModalContext();
+  const { appConfig } = useConfig();
 
   useEffect(() => {
     const accessToken = new gluedin.GluedInAuthModule().getAccessToken();
@@ -68,39 +71,36 @@ function Bottom() {
       <div className="res-bootom-bar">
         <ul className="res-bootom-bar-ul">
           <li>
-            <a href="/vertical-player">
+            <Link to="/vertical-player">
               <HomeIcon />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/discover">
+            <Link to="/discover">
               <DiscoverIcon />
-            </a>
+            </Link>
           </li>
-          {isLoggedin && (
-            <li className="creator-button">
-              <a href="/create-post" className="go-to-page-create-content">
-                <img src="/gluedin/images/creator-button.svg" />
-              </a>
-            </li>
-          )}
+          {isLoggedin &&
+            ((userData?.creator && appConfig?.inviteOnlyCreation) ||
+              (!appConfig?.inviteOnlyCreation && appConfig?.ugcEnabled)) && (
+              <li className="creator-button">
+                <a href="/create-post" className="go-to-page-create-content">
+                  <img src="/gluedin/images/creator-button.svg" alt="" />
+                </a>
+              </li>
+            )}
           <li>
-            <a
-              href="javascript:void(0)"
+            <button
               className="go-to-notification"
               onClick={_navigateToNotification}
             >
               <NotificationIcon />
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              href="javascript:void(0)"
-              className="go-to-user-profile"
-              onClick={_navigateToProfile}
-            >
+            <button className="go-to-user-profile" onClick={_navigateToProfile}>
               <ProfileIcon />
-            </a>
+            </button>
           </li>
         </ul>
       </div>

@@ -78,7 +78,7 @@ function GluedInLogin() {
             onSubmit={handleSubmit}
           >
             <div className="input-grp first-input-box">
-              <label className="mb-2 block">STC Token</label>
+              <label className="mb-2 block">GluedIn Token</label>
               <input
                 type="text"
                 name="accessToken"

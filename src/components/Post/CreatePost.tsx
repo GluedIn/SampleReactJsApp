@@ -1,6 +1,9 @@
+import CameraIcon from "../../assets/icons/CameraIcon";
+import UploadIcon from "../../assets/icons/UploadIcon";
 import { TOAST_TYPES } from "../../constants";
+import { useConfig } from "../../contexts/Config/configContext";
 import { useNotification } from "../../contexts/Notification";
-import LoaderDark from "../common/LoaderDark/LoaderDark";
+// import LoaderDark from "../common/LoaderDark/LoaderDark";
 import ImageUploadLoader from "./Loader";
 import gluedin from "gluedin-shorts-js";
 import React, { useRef, useState } from "react";
@@ -14,68 +17,83 @@ function CreatePost() {
 
   const inputRef = useRef(null);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
-
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const { showNotification } = useNotification();
+  const { appConfig } = useConfig();
 
   const handleFileUploadChange = (files: any) => {
     const fileUploaded = files[0];
     if (
-      fileUploaded.type !== "video/mp4" &&
-      fileUploaded.type !== "video/mpeg"
+      (userData?.creator && appConfig?.inviteOnlyCreation) ||
+      (!appConfig?.inviteOnlyCreation && appConfig?.ugcEnabled)
     ) {
-      showNotification({
-        title: "File not uploaded",
-        subTitle: "File format should be .mp4",
-        autoClose: false,
-        type: TOAST_TYPES.ERROR,
-      });
-    } else {
-      let fileSize = fileUploaded.size / 1024 / 1024;
-      if (fileSize > 50) {
-        setIsUploadingVideo(false);
+      if (
+        fileUploaded.type !== "video/mp4" &&
+        fileUploaded.type !== "video/mpeg"
+      ) {
         showNotification({
           title: "File not uploaded",
-          subTitle: "File size is more than 50 MB",
+          subTitle: "File format should be .mp4",
           autoClose: false,
           type: TOAST_TYPES.ERROR,
         });
-        inputRef.current = null;
-        return;
-      }
-      const videoElement = document.createElement("video");
-      videoElement.preload = "metadata";
-      videoElement.onloadedmetadata = () => {
-        window.URL.revokeObjectURL(videoElement.src);
-        const duration = videoElement.duration;
-        if (duration > 60 || duration < 6) {
+      } else {
+        let fileSize = fileUploaded.size / 1024 / 1024;
+        if (fileSize > 50) {
+          setIsUploadingVideo(false);
           showNotification({
             title: "File not uploaded",
-            subTitle:
-              "Video duration should be greater than 6 seconds and less than 60 seconds",
+            subTitle: "File size is more than 50 MB",
             autoClose: false,
             type: TOAST_TYPES.ERROR,
           });
           inputRef.current = null;
           return;
-        } else {
-          readFile(fileUploaded);
         }
-      };
+        const videoElement = document.createElement("video");
+        videoElement.preload = "metadata";
+        videoElement.onloadedmetadata = () => {
+          window.URL.revokeObjectURL(videoElement.src);
+          const duration = videoElement.duration;
+          if (duration > 60 || duration < 6) {
+            showNotification({
+              title: "File not uploaded",
+              subTitle:
+                "Video duration should be greater than 6 seconds and less than 60 seconds",
+              autoClose: false,
+              type: TOAST_TYPES.ERROR,
+            });
+            inputRef.current = null;
+            return;
+          } else {
+            readFile(fileUploaded);
+          }
+        };
 
-      videoElement.onerror = () => {
-        setIsUploadingVideo(false);
-        showNotification({
-          title: "File not uploaded",
-          subTitle: "Unable to load video file",
-          autoClose: false,
-          type: TOAST_TYPES.ERROR,
-        });
-        inputRef.current = null;
-      };
+        videoElement.onerror = () => {
+          setIsUploadingVideo(false);
+          showNotification({
+            title: "File not uploaded",
+            subTitle: "Unable to load video file",
+            autoClose: false,
+            type: TOAST_TYPES.ERROR,
+          });
+          inputRef.current = null;
+        };
 
-      videoElement.src = URL.createObjectURL(fileUploaded);
+        videoElement.src = URL.createObjectURL(fileUploaded);
+      }
+      files = null;
+    } else {
+      showNotification({
+        title: "File not uploaded",
+        subTitle:
+          "This functionality is restricted to authorized users only. Please contact the support team",
+        autoClose: false,
+        type: TOAST_TYPES.ERROR,
+      });
+      return;
     }
-    files = null;
   };
 
   const readFile = (inputFile: any) => {
@@ -107,6 +125,7 @@ function CreatePost() {
                 "blobUrls",
                 JSON.stringify([videoUrlBlob])
               );
+              //   window.location.href = `/create-post-page-02?contentType=${contentType}`;
               navigate("/create-post-page-02");
             })
             .then(() => {
@@ -144,35 +163,46 @@ function CreatePost() {
     },
   });
 
+  const handleCreator = () => {
+    navigate("/creator");
+  };
+
   return (
     <>
-      <div className="creat-full mt-t-100">
+      <div className="main_upload mt-20">
         <div
           data-isDragActive={isDragActive}
-          className="creat-box w-1/2 flex flex-col justify-center items-center rounded-md border-4 border-gray-300 border-dashed data-[isDragActive=true]:border-[#03f] p-4"
+          className="main_upload-container data-[isDragActive=true]:border-[#03f] p-4"
           {...getRootProps()}
         >
-          <div className="flex justify-center">
-            <img src="/gluedin/images/no-data.png" alt="no-data" />
-          </div>
-          {/* {isUploadingVideo && <ImageUploadLoader />} */}
-          <div className="content-sec dropzone-wrapper flex flex-col items-center justify-center">
-            <div className="c-text text-g">{t("text-drag-drop")}...!</div>
-            <div className="text-sm">
-              {t("text-support-file-type")}
-              <br />
-              {t("text-file-size")}
-            </div>
-
-            <div className="file-upload-btn-parent">
+          {isUploadingVideo && <ImageUploadLoader />}
+          <div className="main_dropzone flex flex-col items-center justify-center">
+            <div className="main_dropzone-actions">
               <input {...getInputProps()} />
               <button
-                disabled={isUploadingVideo}
-                className="new-custom-btn-b mt-t-30 file-upload-btn disabled:opacity-50 flex items-center gap-2"
+                className="position"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleCreator();
+                }}
               >
-                {isUploadingVideo ? <LoaderDark /> : null}{" "}
-                {t("btn-select-from-computer")}
+                <CameraIcon />
+                Camera
               </button>
+              <button disabled={isUploadingVideo} className="">
+                <UploadIcon />
+                <span>
+                  {t("btn-select-from-computer")}
+                  {/* {isUploadingVideo ? <LoaderDark /> : null}{" "} */}
+                </span>
+              </button>
+            </div>
+
+            <div className="main_divider">Or</div>
+
+            <div className="c-text text-g">{t("text-drag-drop")}...!</div>
+            <div className="text-sm">
+              {t("text-support-file-type")} {t("text-file-size")}
             </div>
           </div>
         </div>

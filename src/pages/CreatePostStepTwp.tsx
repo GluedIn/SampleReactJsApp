@@ -8,11 +8,11 @@ const CreateContentStepTwo = () => {
   return (
     <>
       <div className="full-sec">
-        <div className="left-sec">
+        {/* <div className="left-sec">
           <CreateContentSidebar />
-        </div>
+        </div> */}
 
-        <div className="right-sec creat-right-sec">
+        <div className="p-8">
           <CreatePostStepTwo />
         </div>
       </div>

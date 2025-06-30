@@ -2,6 +2,7 @@ import HashtagRail from "../components/HashtagRail/HashtagRail";
 import Bottom from "../components/Layouts/Bottom";
 import HeaderSearch from "../components/Layouts/HeaderSearch";
 import Sidebar from "../components/Layouts/Sidebar";
+import StoryRail from "../components/StoryRail/StoryRail";
 import UserRail from "../components/UserRail/UserRail";
 import VideoRail from "../components/VideoRail/VideoRail";
 import Loader from "../components/common/Loader";
@@ -9,29 +10,36 @@ import { useLoginModalContext } from "../contexts/LoginModal";
 import gluedin from "gluedin-shorts-js";
 import React, { useEffect, useState } from "react";
 
-const curatedContentModule = new gluedin.GluedInCuratedContentModule();
+const CuratedContentModule = new gluedin.GluedInCuratedContentModule();
 
 const Rail = ({ rail }: any) => {
   const rails: any = {
     video: <VideoRail key={rail.id} data={rail} />,
     user: <UserRail data={rail} />,
     hashtag: <HashtagRail key={rail.id} data={rail} />,
+    story: <StoryRail data={rail} />,
   };
   return rails[rail.contentType];
 };
 
 const Discover = (props: any) => {
   const [data, setData]: any = useState(null);
-
   const { setShowLoginModal } = useLoginModalContext();
 
   useEffect(() => {
     async function fetchData() {
       try {
         const curatedContentModuleResponse =
-          await curatedContentModule.getCuratedContentList("discover");
-        if (curatedContentModuleResponse.status === 200) {
-          setData(curatedContentModuleResponse.data.result || []);
+          await CuratedContentModule.getCuratedContentList("discover");
+        if (curatedContentModuleResponse?.status === 200) {
+          //   setData(curatedContentModuleResponse.data.result || []);
+          const filteredData = (
+            curatedContentModuleResponse?.data?.result || []
+          ).filter(
+            (item: any) =>
+              Array.isArray(item?.itemList) && item?.itemList?.length > 0
+          );
+          setData(filteredData);
         }
       } catch (error) {
         console.error(error);
@@ -39,21 +47,6 @@ const Discover = (props: any) => {
     }
     fetchData();
   }, []);
-
-  //   useEffect(() => {
-  //     async function fetchData() {
-  //       try {
-  //         const curatedContentModuleResponse =
-  //           await curatedContentModule.getRailById("<rail-id>");
-  //         if (curatedContentModuleResponse.status === 200) {
-  //           setData(curatedContentModuleResponse.data.result || []);
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     }
-  //     fetchData();
-  //   }, []);
 
   if (data && data.length === 0) return null;
 
@@ -74,12 +67,6 @@ const Discover = (props: any) => {
           {data.map((rail: any) => (
             <Rail key={rail.id} rail={rail} />
           ))}
-
-          {<VideoRail key={data.id} data={data} />}
-
-          {<UserRail key={data.id} data={data} />}
-
-          {<HashtagRail key={data.id} data={data} />}
         </div>
       </div>
       <Bottom />

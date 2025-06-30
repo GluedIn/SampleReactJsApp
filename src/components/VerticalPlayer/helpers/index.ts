@@ -34,6 +34,9 @@ export const getVideosData = (videos: any, len: any = 0) => {
           thumbnailUrl: thumbnailUrl,
           isYoutubeVideo: isYoutubeVideo,
           youtubeVideoId: isYoutubeVideo ? youtubeVideoId : "",
+          likeEnabled: true,
+          shareEnabled: true,
+          commentEnabled: true
         };
       });
   } catch (error) {

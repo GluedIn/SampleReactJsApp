@@ -14,7 +14,8 @@
   margin-bottom: 16px;
 }
 
-.sidebar-ul li a {
+.sidebar-ul li a,
+.sidebar-ul li button {
   text-decoration: none;
   font-size: var(--font-sz-sm);
   font-weight: var(--font-wt-semibold);
@@ -92,7 +93,7 @@
   width: 100%;
   text-align: center;
 }
-.sidebar-ul li.active a {
+.sidebar-ul li.active a, .sidebar-ul li.active button {
   color: var(--theme-color);
   font-weight: var(--font-wt-bold);
 }

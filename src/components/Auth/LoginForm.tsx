@@ -1,6 +1,7 @@
+import { useConfig } from "../../contexts/Config/configContext";
 import LoaderDark from "../common/LoaderDark/LoaderDark";
 import gluedin from "gluedin-shorts-js";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -12,12 +13,12 @@ function LoginForm() {
     password: "",
     deviceId: "23424dsffsf",
     deviceType: "android",
-    autoCreate: true,
     termConditionAccepted: true,
   });
   const [errors, setErrors]: any = useState({});
   const [passwordType, setPasswordType] = useState("password");
   const [isLoading, setIsLoading] = useState(false);
+  const { fetchConfig } = useConfig();
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
@@ -65,6 +66,12 @@ function LoginForm() {
           ) {
             let following = userConfigResponse.data.result.following || [];
             localStorage.setItem("following", JSON.stringify(following));
+            const userData = JSON.parse(
+              localStorage.getItem("userData") || "{}"
+            );
+            if (userData?.token) {
+              await fetchConfig(userData?.token);
+            }
           }
           navigate("/vertical-player");
         } else {
@@ -132,7 +139,7 @@ function LoginForm() {
               <span onClick={togglePassword}>
                 {" "}
                 {passwordType === "password" ? (
-                  <img src="./gluedin/images/eye.svg" />
+                  <img src="./gluedin/images/eye.svg" alt="Eye" />
                 ) : (
                   <i className="fa fa-eye-slash"></i>
                 )}

@@ -1,4 +1,7 @@
 @import url(./Variables.css);
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap");
 
 * {
   box-sizing: border-box;
@@ -84,6 +87,36 @@ iframe {
   margin-bottom: 0 !important;
 }
 
+.error,
+.alert.alert-danger {
+  color: var(--primary-red);
+}
+
+.alert.alert-success {
+  color: var(--primary-success);
+}
+
+.btn_disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.btn_back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #181818;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.btn_back svg {
+  width: 12px;
+  height: 12px;
+}
+
 .btn_transparent {
   border: 0;
   background-color: transparent;
@@ -121,10 +154,88 @@ iframe {
   display: none;
 }
 
-.theme-color-path {
-  path: var(--theme-color);
-}
-
 .theme-color-fill {
   fill: var(--theme-color);
+}
+
+.main_page {
+  width: 100%;
+}
+
+.main_container {
+  padding: 20px;
+}
+
+.main_header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.main_header h2 {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 30px;
+  color: #181818;
+}
+
+.main_header .btn_back {
+  position: absolute;
+  left: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .main_container .main_upload {
+    margin-top: 40px !important;
+  }
+
+  .main_container .main_upload .main_upload-container {
+    background-image: none;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .main_container .main_upload .main_upload-container .main_dropzone-actions {
+    flex-direction: column;
+  }
+
+  .main_container .main_upload .main_dropzone .main_dropzone-actions button {
+    gap: 5px;
+    padding: 15px;
+    min-width: 220px;
+    font-size: 16px;
+  }
+
+  .main_container
+    .main_upload
+    .main_dropzone
+    .main_dropzone-actions
+    button
+    span {
+    font-size: 16px;
+  }
+
+  .main_container
+    .main_upload
+    .main_dropzone
+    .main_dropzone-actions
+    button
+    svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .main_container .main_upload .main_dropzone .main_divider,
+  div.c-text {
+    display: none;
+  }
+
+  .main_container .main_upload .main_dropzone .text-sm {
+    margin-top: 50px;
+  }
+
+  .main_container .main_upload .main_dropzone {
+    width: fit-content;
+  }
 }

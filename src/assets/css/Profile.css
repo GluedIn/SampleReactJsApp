@@ -16,6 +16,15 @@
   width: fit-content;
 }
 
+.profile-page-head-ul .profile-page-head-avatar .img-sec a img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding: 4px;
+  border: 2px solid #fff;
+  object-fit: cover;
+}
+
 .profile-page-head-ul .profile-page-head-avatar .img-sec img.bg-img-02 {
   border-radius: 50%;
   width: 105px;

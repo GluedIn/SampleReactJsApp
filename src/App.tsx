@@ -1,5 +1,6 @@
 import "./App.css";
 import ForgotPasswordForm from "./components/Auth/ForgotPasswordForm";
+import Creator from "./components/CreatorTools/CreatorTools";
 import DeepLink from "./components/DeepLink";
 import GluedInLogin from "./components/GluedInLogin/GluedInLogin";
 import LoginModal from "./components/Login-UI/LoginModal";
@@ -21,6 +22,7 @@ import MyProfile from "./pages/MyProfile";
 import Notification from "./pages/Notification";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
+import StoryView from "./pages/StoryView";
 import SearchFilter from "./pages/searchFilter";
 import i18n from "./translation/translation";
 import gluedin from "gluedin-shorts-js";
@@ -31,10 +33,14 @@ function App() {
   i18n.init();
   const storedValue = localStorage.getItem("defaultLanguage");
   let gluedinSDKInitilize = new gluedin.GluedInSDKInitilize();
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const API_KEY = process.env.REACT_APP_API_KEY;
+  const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
   gluedinSDKInitilize.initialize({
-    apiKey: "<api-key>",
-    secretKey: "<secret-key>",
+    baseUrl: BASE_URL,
+    apiKey: API_KEY,
+    secretKey: SECRET_KEY,
   });
 
   const { showLoginModal, setShowLoginModal } = useLoginModalContext();
@@ -71,6 +77,8 @@ function App() {
           <Route path="/sound-track/:soundId" element={<SoundTrack />} />
           <Route path="/feed" element={<DeepLink />} />
           <Route path="/gluedin-login" element={<GluedInLogin />} />
+          <Route path="/creator" element={<Creator />} />
+          <Route path="/story-view/:userId" element={<StoryView />} />
         </Routes>
         <LoginModal
           show={showLoginModal}

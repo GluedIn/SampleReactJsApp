@@ -18,6 +18,19 @@
 
   --secondary-black: #000000;
 
+  --primary-success: #00BF63;
+
+  --White-White-70: rgba(0, 0, 0, 0.7);
+  --White-White-50: rgba(0, 0, 0, 0.5);
+  --White-White-20: rgba(0, 0, 0, 0.2);
+  --White-White-10: rgba(0, 0, 0, 0.1);
+
+  --Black-Black-70: rgba(23, 22, 25, 0.7);
+
+  --text-tertiary: #8b8a8c;
+
+  --borders-regular: #454547;
+
   --font-sz-xs: 14px;
   --font-sz-sm: 16px;
   --font-sz-md: 18px;

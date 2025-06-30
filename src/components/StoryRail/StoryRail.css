@@ -1,0 +1,32 @@
+@import url(../../assets/css/Variables.css);
+
+.top-profile-box .item img {
+  width: 55px !important;
+  margin: auto;
+  border-radius: 50%;
+  height: 55px;
+  object-fit: cover;
+}
+
+.top-profile-box .item span.name {
+  display: block;
+  margin-top: 10px;
+  font-size: 15px;
+  color: var(--primary-black);
+}
+
+span.followers {
+  font-size: 10px;
+  margin-top: 0px;
+  color: var(--white);
+}
+.top-profile-box {
+  margin-top: 20px;
+}
+
+.item a {
+  text-decoration: none !important;
+}
+.top-profile-box-left-sec {
+  padding: 0;
+}

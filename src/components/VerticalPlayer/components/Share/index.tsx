@@ -13,21 +13,31 @@ export default function Share({
   video,
   show,
   handleClose,
+  shareType,
+  currentStory,
 }: {
-  video: any;
+  video?: any;
   show: boolean;
   handleClose: () => void;
+  shareType?: string;
+  currentStory?: any;
 }) {
   const [isRtl, setIsRtl] = useState(false);
   const { trackEvent } = useAnalytics();
   const { showNotification, closeNotification } = useNotification();
   const { t } = useTranslation();
+  let usedHashTagTitle: any;
+  let websiteUrl: any;
 
-  const usedHashTagTitle = Array.isArray(video.hashtagTitles)
-    ? video.hashtagTitles.join(",")
-    : "";
+  if (shareType !== "story" || !shareType) {
+    usedHashTagTitle = Array.isArray(video.hashtagTitles)
+      ? video.hashtagTitles.join(",")
+      : "";
 
-  const websiteUrl = `${window.location.origin}/content/${video?.videoId}?contentType=${CONTENT_TYPE.SHARE}`;
+    websiteUrl = `${window.location.origin}/content/${video?.videoId}?contentType=${CONTENT_TYPE.SHARE}`;
+  } else if (shareType === "story") {
+    websiteUrl = `${window.location.origin}/story-view/${currentStory?.userId}?type=profile`;
+  }
 
   const SHARE_PLATFORMS = [
     {
@@ -40,7 +50,7 @@ export default function Share({
       id: "twitter",
       name: "Twitter",
       icon: <Twitter />,
-      url: `https://twitter.com/intent/tweet?url=${websiteUrl}&text=${video.description}&hashtags=${usedHashTagTitle}&`,
+      url: `https://twitter.com/intent/tweet?url=${websiteUrl}&text=${video?.description}&hashtags=${usedHashTagTitle}&`,
     },
     {
       id: "linkedin",

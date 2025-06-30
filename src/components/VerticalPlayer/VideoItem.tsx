@@ -1,7 +1,8 @@
 import PauseIcon from "../../assets/icons/PauseIcon";
 import PlayIcon from "../../assets/icons/PlayIcon";
 import SoundWave from "../../assets/icons/SoundWave";
-import { CONTENT_TYPE, EVENTS } from "../../constants";
+import { CONTENT_TYPE, EVENTS, PAGE } from "../../constants";
+import { useConfig } from "../../contexts/Config/configContext";
 import { useLoginModalContext } from "../../contexts/LoginModal";
 import useAnalytics from "../../hooks/useAnalytics";
 import useElementOnScreen from "../../hooks/useElementOnScreen";
@@ -87,7 +88,7 @@ const VideoItem = forwardRef(
       soundName,
       videoId,
     } = video;
-    const { userId, fullName, profileImageUrl } = user ?? {};
+    const { userId, fullName, profileImageUrl, userName } = user ?? {};
     const [showControls, setShowControls] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [showShare, setShowShare] = useState(false);
@@ -100,17 +101,13 @@ const VideoItem = forwardRef(
     const [showRepost, setShowRepost] = useState(false);
     const [commentPostId, setCommentPostId] = useState("");
     const [videoCommentCount, setVideoCommentCount] = useState(commentCount);
-
     const { t } = useTranslation();
-    // const [showHighlightedComment, setShowHighlightedComment] = useState(false);
     const hls = useRef<Hls>();
-
     const { setShowLoginModal } = useLoginModalContext();
     const navigate = useNavigate();
     const { trackEvent } = useAnalytics();
     const parsedDescription = parseDescription(description, taggedUsers);
     const [showVideoError, setShowVideoError] = useState(false);
-
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
     const videoRef = ref;
     const videoControls = useRef<HTMLDivElement>(null);
@@ -120,10 +117,30 @@ const VideoItem = forwardRef(
       threshold: 0.5,
     };
     const [videoErrorMessage, setVideoErrorMessage] = useState("");
-
-    // const { sound = {} } = useSound(soundId);
-
     const isVisible = useElementOnScreen(options, videoRef);
+    const { appConfig } = useConfig();
+    const [userMetaData, setUserMetaData]: any = useState();
+
+    useEffect(() => {
+      async function fetchMetaData(userId: string) {
+        try {
+          var UserModuleObj = new gluedin.GluedInFeedModule();
+          var userMetaData = await UserModuleObj.getMetadata({
+            type: "storyOwner",
+            ids: [userId],
+          });
+          if (userMetaData.status === 200) {
+            const userResponse = userMetaData.data.result;
+            setUserMetaData(userResponse?.storyOwner[0] || []);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (userId) {
+        fetchMetaData(userId);
+      }
+    }, [userId]);
 
     const {
       isVideoLiked,
@@ -502,19 +519,48 @@ const VideoItem = forwardRef(
                 </div>
               )}
               <div className={`top_info ${showComments ? "pr_6" : ""}`}>
-                <a href={`/profile/${userId}`}>
+                {userMetaData && userMetaData?.stories?.length > 0 ? (
                   <div className="img_name">
-                    <img
-                      src={
-                        profileImageUrl
-                          ? profileImageUrl
-                          : "/gluedin/images/Profile.png"
-                      }
-                      alt={`${fullName} profile pic`}
-                    />
-                    <h6 className="user_name">{fullName}</h6>
+                    <Link
+                      to={`/story-view/${userMetaData?.userId}?type=${PAGE.PROFILE}`}
+                    >
+                      <img
+                        src={profileImageUrl}
+                        alt=""
+                        style={{
+                          border:
+                            userMetaData?.stories?.length > 0
+                              ? "2px solid #0033FF"
+                              : "2px solid #fff",
+                          padding:
+                            userMetaData?.stories?.length > 0 ? "2px" : "0",
+                        }}
+                      />
+                    </Link>
+                    <Link to={`/profile/${userId}`} className="img_name">
+                      <h6 className="user_name">
+                        {fullName ? fullName : userName}
+                      </h6>
+                    </Link>
                   </div>
-                </a>
+                ) : (
+                  <a href={`/profile/${userId}`}>
+                    <div className="img_name">
+                      <img
+                        src={
+                          profileImageUrl
+                            ? profileImageUrl
+                            : "/gluedin/images/Profile.png"
+                        }
+                        alt={`${fullName} profile pic`}
+                      />
+                      <h6 className="user_name">
+                        {fullName ? fullName : userName}
+                      </h6>
+                    </div>
+                  </a>
+                )}
+
                 {userData?.userId !== userId && !isFollowing && (
                   <button
                     className="follow_btn"
@@ -537,22 +583,6 @@ const VideoItem = forwardRef(
               <div className={`post_desc ${showComments ? "pr_6" : ""}`}>
                 <h5 className="title">{title}</h5>
                 <p className="desc">
-                  {/* {showMore
-                    ? description
-                    : description.substring(0, 100)} */}
-                  {/* {Array.isArray(parsedDescription)
-                    ? (parsedDescription as any).map((item: any) => item)
-                    : parsedDescription} */}
-                  {/* {description?.length > 100 && (
-                    <button
-                      className="text-b show-more-content"
-                      onClick={() => setShowMore((prev) => !prev)}
-                    >
-                      {" "}
-                      {showMore ? "Show Less" : "Show More"}
-                    </button>
-                  )} */}
-                  {/* <br /> */}
                   {Array.isArray(parsedDescription) ? (
                     parsedDescription.map((item, index) => item)
                   ) : (
@@ -657,18 +687,21 @@ const VideoItem = forwardRef(
               )}
 
               {/* Repost Icon */}
-              <button
-                className="repost_icon"
-                title="Repost"
-                onClick={toggleRepostModal}
-              >
-                <div className="icon">
-                  <RepostIcon />
-                </div>
-                <div className="icon-count repost_count">
-                  {repostCount || 0}
-                </div>
-              </button>
+              {((userData?.creator && appConfig?.inviteOnlyCreation) ||
+                (!appConfig?.inviteOnlyCreation && appConfig?.ugcEnabled)) && (
+                <button
+                  className="repost_icon"
+                  title="Repost"
+                  onClick={toggleRepostModal}
+                >
+                  <div className="icon">
+                    <RepostIcon />
+                  </div>
+                  <div className="icon-count repost_count">
+                    {repostCount || 0}
+                  </div>
+                </button>
+              )}
 
               {false && (
                 <button

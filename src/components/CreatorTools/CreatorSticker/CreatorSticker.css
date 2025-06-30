@@ -1,0 +1,21 @@
+.sticker-selector h3 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 25px;
+  color: #242424;
+  margin: 0 0 10px 0;
+}
+
+.sticker-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sticker-list .sticker-item {
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid;
+  padding: 2px;
+  transition: all 0.3s ease;
+}

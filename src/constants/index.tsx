@@ -37,3 +37,11 @@ export const TOAST_TYPES = {
 export const STATUS = {
   VIDEO_ALREADY_REPOSTED: "VIDEO_ALREADY_REPOSTED",
 };
+
+export const PAGE = {
+  FEED: "feed",
+  PROFILE: "profile",
+  DISCOVER: "discover",
+};
+
+export const FONTS = ["Arial", "Roboto", "NotoSans", "Poppins"];

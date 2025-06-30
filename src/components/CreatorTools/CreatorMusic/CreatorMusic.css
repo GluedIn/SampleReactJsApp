@@ -1,0 +1,80 @@
+.music-container ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.music-container ul li.music-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.music-container ul li.music-item .music-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  gap: 8px;
+}
+
+.music-container ul li.music-item .music-item-content img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.music-container ul li.music-item .music-item-content .music-item-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.music-container ul li.music-item .music-item-content .music-item-name h2 {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 25px;
+  color: #181818;
+  margin: 0;
+  word-break: break-all;
+}
+
+.music-container ul li.music-item .music-item-content .music-item-name span {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #2d2d2d;
+  margin: 0;
+  word-break: break-all;
+}
+
+.music-container ul li.music-item .music-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.music-container ul li.music-item .music-item-actions button svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .music-container ul li.music-item .music-item-content .music-item-name h2 {
+    color: #ffffff;
+  }
+  .music-container ul li.music-item .music-item-content .music-item-name span {
+    color: #a5a5a5;
+  }
+
+  .music-container ul li.music-item .music-item-actions button svg circle,
+  .music-container ul li.music-item .music-item-actions button svg ellipse {
+    fill: white;
+  }
+
+  .music-container ul li.music-item .music-item-actions button svg path {
+    fill: black;
+  }
+}

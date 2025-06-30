@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function CloseIcon() {
+export default function CloseIcon({ width = "52", height = "52" }) {
   return (
-    <svg width="52" height="52" viewBox="0 0 52 52">
+    <svg width={width} height={height} viewBox="0 0 52 52">
       <g
         id="Group_24410"
         data-name="Group 24410"

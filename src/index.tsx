@@ -1,4 +1,5 @@
 import App from "./App";
+import { ConfigProvider } from "./contexts/Config/configContext";
 import { DirectionProvider } from "./contexts/Direction";
 import { LoginModalProvider } from "./contexts/LoginModal";
 import { NotificationProvider } from "./contexts/Notification";
@@ -15,13 +16,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <DirectionProvider>
-        <LoginModalProvider>
-          <NotificationProvider>
-            <App />
-          </NotificationProvider>
-        </LoginModalProvider>
-      </DirectionProvider>
+      <ConfigProvider>
+        <DirectionProvider>
+          <LoginModalProvider>
+            <NotificationProvider>
+              <App />
+            </NotificationProvider>
+          </LoginModalProvider>
+        </DirectionProvider>
+      </ConfigProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
